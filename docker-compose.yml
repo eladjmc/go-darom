@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: go_darom_postgres
+    restart: unless-stopped
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-go_darom}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-go_darom_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-go_darom}
+    volumes:
+      - go_darom_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-go_darom} -d ${POSTGRES_DB:-go_darom}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  go_darom_pgdata:

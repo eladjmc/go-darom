@@ -1,0 +1,5 @@
+---
+description: Go Darom project governance and phased implementation
+alwaysApply: true
+---
+Read `docs/07-delivery/CURSOR_IMPLEMENTATION_KICKOFF.md` and `README.md` before work. Approved product and HLD are binding; UX/asset derivatives provisional. No invented scope; no unapproved vendor/architecture changes. Write milestone-specific LLD/contracts/tests before code, seek first milestone plan approval, run checks and report actual evidence. Hebrew RTL user-facing copy, English engineering. Server-side auth and version-checked game state. Goban requires executed POC first.

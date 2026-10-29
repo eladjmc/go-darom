@@ -1,0 +1,149 @@
+[
+  {
+    "id": "BR-REF-002",
+    "path": "assets/source/BR-REF-002-selected-brand-board.png",
+    "role": "Approved concept source",
+    "status": "OWNER-SELECTED",
+    "notes": "Logo alternative #2; full generated board, raster. Do not claim vector/logo-master."
+  },
+  {
+    "id": "BR-LOCKUP-REF",
+    "path": "assets/brand/logo-selected-lockup-reference.png",
+    "role": "Raster presentation crop",
+    "status": "REVIEW",
+    "notes": "Cropped from selected concept; may contain source mockup artifacts; not print-ready."
+  },
+  {
+    "id": "BR-SYMBOL-REF",
+    "path": "assets/brand/logo-selected-symbol-reference.png",
+    "role": "Symbol presentation crop",
+    "status": "REVIEW",
+    "notes": "Raster extraction; not transparent, no authentic vector master."
+  },
+  {
+    "id": "HR-001-SOURCE",
+    "path": "assets/source/HR-001-selected-hero-original.png",
+    "role": "Approved image source",
+    "status": "OWNER-SELECTED",
+    "notes": "Original hero alternative #3; no substitution."
+  },
+  {
+    "id": "HR-001-ORIGINAL",
+    "path": "assets/hero/home-hero-original.webp",
+    "role": "Website hero original",
+    "status": "DERIVED-PENDING-VISUAL-QA",
+    "notes": "Derived only from the selected Hero #3; verify crop/placement with real RTL overlay."
+  },
+  {
+    "id": "HR-001-DESKTOP",
+    "path": "assets/hero/home-hero-desktop.webp",
+    "role": "Website hero desktop",
+    "status": "DERIVED-PENDING-VISUAL-QA",
+    "notes": "Derived only from the selected Hero #3; verify crop/placement with real RTL overlay."
+  },
+  {
+    "id": "HR-001-MOBILE",
+    "path": "assets/hero/home-hero-mobile.webp",
+    "role": "Website hero mobile",
+    "status": "DERIVED-PENDING-VISUAL-QA",
+    "notes": "Derived only from the selected Hero #3; verify crop/placement with real RTL overlay."
+  },
+  {
+    "id": "IC-PLAY-GO",
+    "path": "assets/icons/play-go.svg",
+    "role": "Custom Go UI icon",
+    "status": "PROPOSED",
+    "notes": "Original SVG based on approved palette; not a logo."
+  },
+  {
+    "id": "IC-STUDY-BOARD",
+    "path": "assets/icons/study-board.svg",
+    "role": "Custom Go UI icon",
+    "status": "PROPOSED",
+    "notes": "Original SVG based on approved palette; not a logo."
+  },
+  {
+    "id": "IC-PUZZLE",
+    "path": "assets/icons/puzzle.svg",
+    "role": "Custom Go UI icon",
+    "status": "PROPOSED",
+    "notes": "Original SVG based on approved palette; not a logo."
+  },
+  {
+    "id": "IC-BLACK-STONE",
+    "path": "assets/icons/black-stone.svg",
+    "role": "Custom Go UI icon",
+    "status": "PROPOSED",
+    "notes": "Original SVG based on approved palette; not a logo."
+  },
+  {
+    "id": "IC-WHITE-STONE",
+    "path": "assets/icons/white-stone.svg",
+    "role": "Custom Go UI icon",
+    "status": "PROPOSED",
+    "notes": "Original SVG based on approved palette; not a logo."
+  },
+  {
+    "id": "IC-HANDICAP",
+    "path": "assets/icons/handicap.svg",
+    "role": "Custom Go UI icon",
+    "status": "PROPOSED",
+    "notes": "Original SVG based on approved palette; not a logo."
+  },
+  {
+    "id": "DA-GOBAN-GRID-TILE",
+    "path": "assets/patterns/goban-grid-tile.svg",
+    "role": "Decoration",
+    "status": "PROPOSED",
+    "notes": "Decorative only; not for live game board."
+  },
+  {
+    "id": "DA-SECTION-DIVIDER",
+    "path": "assets/patterns/section-divider.svg",
+    "role": "Decoration",
+    "status": "PROPOSED",
+    "notes": "Decorative only; not for live game board."
+  },
+  {
+    "id": "ES-NO-GAMES",
+    "path": "assets/empty-states/no-games.svg",
+    "role": "Empty state",
+    "status": "PROPOSED",
+    "notes": "Original SVG illustration; text supplied by React, never image text."
+  },
+  {
+    "id": "ES-NO-EVENTS",
+    "path": "assets/empty-states/no-events.svg",
+    "role": "Empty state",
+    "status": "PROPOSED",
+    "notes": "Original SVG illustration; text supplied by React, never image text."
+  },
+  {
+    "id": "ES-NO-MESSAGES",
+    "path": "assets/empty-states/no-messages.svg",
+    "role": "Empty state",
+    "status": "PROPOSED",
+    "notes": "Original SVG illustration; text supplied by React, never image text."
+  },
+  {
+    "id": "ES-NO-PUZZLES",
+    "path": "assets/empty-states/no-puzzles.svg",
+    "role": "Empty state",
+    "status": "PROPOSED",
+    "notes": "Original SVG illustration; text supplied by React, never image text."
+  },
+  {
+    "id": "ES-NO-RESULTS",
+    "path": "assets/empty-states/no-results.svg",
+    "role": "Empty state",
+    "status": "PROPOSED",
+    "notes": "Original SVG illustration; text supplied by React, never image text."
+  },
+  {
+    "id": "ES-SHOP-COMING-SOON",
+    "path": "assets/empty-states/shop-coming-soon.svg",
+    "role": "Empty state",
+    "status": "PROPOSED",
+    "notes": "Original SVG illustration; text supplied by React, never image text."
+  }
+]
