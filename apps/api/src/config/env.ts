@@ -12,18 +12,30 @@ export interface Env {
   webOrigin: string;
   nodeEnv: string;
   version: string;
+  clerkSecretKey: string;
+  identityDevStub: boolean;
+  bootstrapAdminClerkIds: string[];
 }
 
 export function loadEnv(): Env {
   const databaseUrl =
     process.env.DATABASE_URL ??
     "postgresql://go_darom:go_darom_dev@localhost:5432/go_darom";
+  const nodeEnv = process.env.NODE_ENV ?? "development";
+  const identityDevStub =
+    process.env.IDENTITY_DEV_STUB === "true" && nodeEnv !== "production";
 
   return {
     databaseUrl,
     apiPort: Number(process.env.API_PORT ?? "4000"),
     webOrigin: process.env.WEB_ORIGIN ?? "http://localhost:5173",
-    nodeEnv: process.env.NODE_ENV ?? "development",
-    version: process.env.APP_VERSION ?? "0.1.0-m1",
+    nodeEnv,
+    version: process.env.APP_VERSION ?? "0.3.0-m3",
+    clerkSecretKey: process.env.CLERK_SECRET_KEY ?? "",
+    identityDevStub,
+    bootstrapAdminClerkIds: (process.env.BOOTSTRAP_ADMIN_CLERK_IDS ?? "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean),
   };
 }

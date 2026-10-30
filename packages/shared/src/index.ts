@@ -7,4 +7,7 @@ export interface HealthResponse {
   version: string;
 }
 
-export const APP_VERSION = "0.1.0-m1";
+export const APP_VERSION = "0.3.0-m3";
+
+export * from "./identity.js";
+export * from "./community.js";

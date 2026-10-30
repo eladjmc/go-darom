@@ -28,25 +28,46 @@
     "notes": "Original hero alternative #3; no substitution."
   },
   {
+    "id": "HR-001B-SOURCE",
+    "path": "assets/source/HR-001b-selected-hero-rtl-board-left.png",
+    "role": "Owner-provided RTL flip source",
+    "status": "OWNER-SELECTED",
+    "notes": "Board left / open right flip of Hero #3; superseded on homepage by HR-001c."
+  },
+  {
+    "id": "HR-001C-SOURCE",
+    "path": "assets/source/HR-001c-selected-hero-minimal-natural.png",
+    "role": "Owner-provided homepage hero source",
+    "status": "OWNER-SELECTED",
+    "notes": "Minimal natural board-left / open-right plate without outer shadow; current homepage hero."
+  },
+  {
     "id": "HR-001-ORIGINAL",
     "path": "assets/hero/home-hero-original.webp",
     "role": "Website hero original",
     "status": "DERIVED-PENDING-VISUAL-QA",
-    "notes": "Derived only from the selected Hero #3; verify crop/placement with real RTL overlay."
+    "notes": "Derived from HR-001c for current homepage; verify crop/placement with real RTL overlay."
   },
   {
     "id": "HR-001-DESKTOP",
     "path": "assets/hero/home-hero-desktop.webp",
     "role": "Website hero desktop",
     "status": "DERIVED-PENDING-VISUAL-QA",
-    "notes": "Derived only from the selected Hero #3; verify crop/placement with real RTL overlay."
+    "notes": "Derived from HR-001c; verify crop/placement with real RTL overlay."
+  },
+  {
+    "id": "HR-001C-WEB",
+    "path": "assets/hero/home-hero-minimal-natural.webp",
+    "role": "Website hero desktop (HR-001c)",
+    "status": "DERIVED-PENDING-VISUAL-QA",
+    "notes": "Near-native aspect WebP of HR-001c; homepage desktop src."
   },
   {
     "id": "HR-001-MOBILE",
     "path": "assets/hero/home-hero-mobile.webp",
     "role": "Website hero mobile",
     "status": "DERIVED-PENDING-VISUAL-QA",
-    "notes": "Derived only from the selected Hero #3; verify crop/placement with real RTL overlay."
+    "notes": "Derived from HR-001c; board-weighted mobile crop."
   },
   {
     "id": "IC-PLAY-GO",

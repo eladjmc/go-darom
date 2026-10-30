@@ -1,15 +1,51 @@
-# Go Darom — Cursor Handoff Bundle v1.0
+# Go Darom
+
+Hebrew RTL Go community platform for southern Israel.
 
 **Start here:** [`docs/07-delivery/CURSOR_IMPLEMENTATION_KICKOFF.md`](docs/07-delivery/CURSOR_IMPLEMENTATION_KICKOFF.md)
 
-This bundle consolidates the **approved** Product Baseline v0.1 and HLD v0.2, plus the **draft/provisional** UX + brand assets v0.2 and original decision/open-issue logs. See the kickoff file for exact authority and gates. No application code has been built.
+## Milestone status
 
-## Folders
-- `docs/00-governance/source-reconciliation/`: original decisions and unresolved issues (historic DRAFT labels may remain).
-- `docs/01-product/`: owner-approved Product Baseline v0.1.
-- `docs/02-architecture/`: owner-approved HLD v0.2; some subordinate ADRs are still proposed/POC-dependent.
-- `docs/03-design/`: UX/brand draft and actual selected image sources, derivatives, SVGs, manifest.
-- `docs/07-delivery/`: detailed kickoff contract and Cursor first prompt.
-- `.cursor/rules/`: brief binding working rules.
+| Milestone | Status |
+|---|---|
+| M0 Documentation audit | Done |
+| M1 Foundation + Goban Engine POC | Approved |
+| M2 Visual shell + identity | Implemented — awaiting owner sign-off |
+| M3+ | Not started |
 
-**Status note:** original nested documents may carry their earlier draft metadata. The recorded owner approval of PRD v0.1 and HLD v0.2 governs. It does not turn every open ADR or draft visual into an approval.
+## Local development
+
+```bash
+cp .env.example .env
+docker compose up -d
+npm install
+npm run db:migrate
+npm run dev:api    # http://localhost:4000
+npm run dev:web    # http://localhost:5173
+```
+
+### Auth locally
+
+- **Stub (default in `.env.example`):** `IDENTITY_DEV_STUB=true` and `VITE_IDENTITY_DEV_STUB=true` — use «התחברות עם Google» / sign-in stub to exercise onboarding without Clerk keys.
+- **Real Clerk:** set `CLERK_SECRET_KEY` + `VITE_CLERK_PUBLISHABLE_KEY`, set both stub flags to `false`, enable Google-only in Clerk.
+
+### Checks
+
+```bash
+npm run typecheck
+npm run lint
+npm test
+npm run build
+```
+
+### Useful URLs
+
+- Home: http://localhost:5173/
+- Shop: http://localhost:5173/shop
+- Members: http://localhost:5173/members
+- Health: http://localhost:4000/health
+- M1 engine demo (dev only): http://localhost:5173/dev/goban-poc
+
+## Authority
+
+Approved Product Baseline v0.1 and HLD v0.2 are binding. UX/brand derivatives need visual QA. Selected logo #2 and hero #3 sources must not be substituted.

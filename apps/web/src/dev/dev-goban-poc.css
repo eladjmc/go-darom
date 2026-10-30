@@ -1,0 +1,145 @@
+.poc-shell {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+  color: #252925;
+  font-family: "Heebo", "Segoe UI", Tahoma, sans-serif;
+}
+
+.poc-header h1 {
+  margin: 0.35rem 0;
+  color: #315c49;
+  font-size: 1.75rem;
+}
+
+.poc-badge {
+  display: inline-block;
+  margin: 0;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  background: #f2ebdd;
+  color: #616b62;
+  font-size: 0.8rem;
+}
+
+.poc-lede {
+  color: #616b62;
+  line-height: 1.5;
+}
+
+.poc-lede code {
+  font-size: 0.85em;
+}
+
+.poc-status {
+  margin: 1rem 0;
+  padding: 0.9rem 1rem;
+  background: #fff;
+  border: 1px solid #dee3db;
+  border-radius: 12px;
+}
+
+.poc-status ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.poc-msg {
+  margin: 0.75rem 0 0;
+}
+
+.poc-msg.error {
+  color: #b6453d;
+}
+
+.poc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.poc-actions button {
+  cursor: pointer;
+  border: 1px solid #315c49;
+  background: #315c49;
+  color: #fff;
+  border-radius: 10px;
+  padding: 0.45rem 0.9rem;
+  font: inherit;
+}
+
+.poc-actions button:nth-child(2),
+.poc-actions button:nth-child(3) {
+  background: #fff;
+  color: #315c49;
+}
+
+.poc-board-wrap {
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  padding: 0.5rem 0 1rem;
+}
+
+.poc-board {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  touch-action: manipulation;
+}
+
+.poc-wood {
+  fill: #d7b07a;
+}
+
+.poc-line {
+  stroke: #3a2f22;
+  stroke-width: 1.25;
+}
+
+.poc-star {
+  fill: #3a2f22;
+}
+
+.poc-black {
+  fill: #1a1a1a;
+  stroke: #000;
+  stroke-width: 1;
+  pointer-events: none;
+}
+
+.poc-white {
+  fill: #f7f3ea;
+  stroke: #333;
+  stroke-width: 1.25;
+  pointer-events: none;
+}
+
+.poc-hit {
+  fill: transparent;
+  cursor: pointer;
+}
+
+/* Ghost preview tracks side-to-move (set on .poc-board). */
+.poc-board.poc-preview-black .poc-hit:hover {
+  fill: rgba(26, 26, 26, 0.45);
+  stroke: rgba(0, 0, 0, 0.55);
+  stroke-width: 1;
+}
+
+.poc-board.poc-preview-white .poc-hit:hover {
+  fill: rgba(247, 243, 234, 0.72);
+  stroke: rgba(51, 51, 51, 0.65);
+  stroke-width: 1.25;
+}
+
+.poc-howto {
+  color: #616b62;
+  line-height: 1.55;
+  padding-inline-start: 1.25rem;
+}

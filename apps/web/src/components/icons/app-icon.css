@@ -1,0 +1,11 @@
+.app-icon {
+  display: block;
+  flex-shrink: 0;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
+.app-icon--lucide {
+  /* Inherit link/button color for hover/active */
+  color: currentColor;
+}

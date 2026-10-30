@@ -2,6 +2,7 @@
   "name": "go-darom",
   "private": true,
   "version": "0.1.0-m1",
+  "type": "module",
   "description": "Go Darom — Hebrew RTL Go community platform",
   "workspaces": [
     "apps/*",
@@ -11,12 +12,19 @@
     "dev:api": "npm run dev -w @go-darom/api",
     "dev:web": "npm run dev -w @go-darom/web",
     "build": "npm run build -w @go-darom/shared && npm run build -w @go-darom/go-engine && npm run build -w @go-darom/api && npm run build -w @go-darom/web",
-    "typecheck": "npm run typecheck -w @go-darom/shared && npm run typecheck -w @go-darom/go-engine && npm run typecheck -w @go-darom/api && npm run typecheck -w @go-darom/web",
-    "lint": "npm run lint -w @go-darom/shared && npm run lint -w @go-darom/go-engine && npm run lint -w @go-darom/api && npm run lint -w @go-darom/web",
-    "test": "npm run test -w @go-darom/go-engine && npm run test -w @go-darom/api",
+    "typecheck": "npm run build -w @go-darom/shared && npm run typecheck -w @go-darom/shared && npm run typecheck -w @go-darom/go-engine && npm run typecheck -w @go-darom/api && npm run typecheck -w @go-darom/web",
+    "lint": "eslint \"apps/**/*.{ts,tsx}\" \"packages/**/*.{ts,tsx}\"",
+    "test": "npm run test -w @go-darom/shared && npm run test -w @go-darom/go-engine && npm run test -w @go-darom/api && npm run test -w @go-darom/web",
     "poc:go-engine": "npm run test -w @go-darom/go-engine",
     "db:generate": "npm run db:generate -w @go-darom/api",
     "db:migrate": "npm run db:migrate -w @go-darom/api"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
+    "@typescript-eslint/parser": "^8.26.1",
+    "eslint": "^9.22.0",
+    "playwright": "^1.64.1",
+    "typescript": "^5.8.2"
   },
   "engines": {
     "node": ">=20"

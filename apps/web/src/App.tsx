@@ -1,58 +1,129 @@
-import { useEffect, useState } from "react";
-import type { HealthResponse } from "@go-darom/shared";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { useAuth } from "./auth/AuthContext";
+import { rememberReturnIntent } from "./auth/return-intent";
+import { AppShell } from "./components/layout/AppShell";
+import { AdminPage } from "./pages/AdminPage";
+import { HomePage } from "./pages/HomePage";
+import { MePage } from "./pages/MePage";
+import { CommunityPage } from "./pages/CommunityPage";
+import { DmInboxPage, DmThreadPage } from "./pages/DmPages";
+import { NotificationsPage } from "./pages/NotificationsPage";
+import { OnboardingPage } from "./pages/OnboardingPage";
+import { LearnPage } from "./pages/LearnPage";
+import { PlaceholderPage } from "./pages/PlaceholderPage";
+import { ShopPage } from "./pages/ShopPage";
+import { SignInPage } from "./pages/SignInPage";
+import { SsoCallbackPage } from "./pages/SsoCallbackPage";
+import { AppErrorPage } from "./pages/errors/AppErrorPage";
+import "./pages/members.css";
+
+function AuthLoading() {
+  return (
+    <section className="auth-page">
+      <p className="auth-status">טוענים…</p>
+    </section>
+  );
+}
+
+function RequireOnboarded({ children }: { children: React.ReactNode }) {
+  const { me, loading } = useAuth();
+  const location = useLocation();
+  if (loading && !me) return <AuthLoading />;
+  if (!me) {
+    rememberReturnIntent(`${location.pathname}${location.search}`);
+    return <Navigate to="/sign-in" replace state={{ from: location }} />;
+  }
+  if (!me.onboardingCompleted) return <Navigate to="/onboarding" replace />;
+  return children;
+}
 
 export function App() {
-  const [health, setHealth] = useState<HealthResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch("/health")
-      .then(async (res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
-        }
-        return (await res.json()) as HealthResponse;
-      })
-      .then((body) => {
-        if (!cancelled) {
-          setHealth(body);
-        }
-      })
-      .catch((err: unknown) => {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : "שגיאה לא ידועה");
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
   return (
-    <main className="shell">
-      <header className="brand">
-        <p className="eyebrow">קהילת גו בדרום</p>
-        <h1>גו דרום</h1>
-        <p className="lede">יסודות מערכת — אבן דרך 1 (ללא עיצוב סופי)</p>
-      </header>
-
-      <section className="panel" aria-live="polite">
-        <h2>סטטוס שרת</h2>
-        {error && <p className="warn">לא ניתן להתחבר ל־API: {error}</p>}
-        {!error && !health && <p>טוען…</p>}
-        {health && (
-          <ul>
-            <li>מצב: {health.status === "ok" ? "תקין" : "מוגבל"}</li>
-            <li>מסד נתונים: {health.db === "up" ? "פעיל" : "לא זמין"}</li>
-            <li>גרסה: {health.version}</li>
-          </ul>
-        )}
-      </section>
-
-      <p className="note">
-        לוגו וקטור סופי טרם אושר — זהו מעטפת זמנית בלבד. לוח גו יוצג ממנוע המשחק, לא מתמונה.
-      </p>
-    </main>
+    <AppShell>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/shop" element={<ShopPage />} />
+        <Route path="/sign-in/*" element={<SignInPage />} />
+        <Route path="/sso-callback" element={<SsoCallbackPage />} />
+        <Route path="/onboarding" element={<OnboardingPage />} />
+        <Route
+          path="/me"
+          element={
+            <RequireOnboarded>
+              <MePage />
+            </RequireOnboarded>
+          }
+        />
+        <Route path="/members" element={<Navigate to="/community" replace />} />
+        <Route
+          path="/admin/*"
+          element={
+            <RequireOnboarded>
+              <AdminPage />
+            </RequireOnboarded>
+          }
+        />
+        <Route path="/community" element={<CommunityPage />} />
+        <Route
+          path="/dms"
+          element={
+            <RequireOnboarded>
+              <DmInboxPage />
+            </RequireOnboarded>
+          }
+        />
+        <Route
+          path="/dms/:threadId"
+          element={
+            <RequireOnboarded>
+              <DmThreadPage />
+            </RequireOnboarded>
+          }
+        />
+        <Route
+          path="/notifications"
+          element={
+            <RequireOnboarded>
+              <NotificationsPage />
+            </RequireOnboarded>
+          }
+        />
+        <Route
+          path="/play"
+          element={
+            <PlaceholderPage
+              title="משחקים"
+              description="משחקים ידידותיים בלי דירוגים וטורנירים. המגרש נפתח בקרוב — בינתיים מוזמנים למפגשים."
+              emptySrc="/empty-states/no-games.svg"
+            />
+          }
+        />
+        <Route path="/learn" element={<LearnPage />} />
+        <Route
+          path="/puzzles"
+          element={
+            <PlaceholderPage
+              title="חידות"
+              description="חידת השבוע וספריית החידות פתוחות למבקרים. החידות יופיעו כאן בקרוב."
+              emptySrc="/empty-states/no-puzzles.svg"
+            />
+          }
+        />
+        <Route
+          path="/events"
+          element={
+            <PlaceholderPage
+              title="מפגשים"
+              description="מפגשי הקהילה פתוחים לכולם. כשיתפרסם מפגש — תוכלו לראות אותו ולהירשם כאן."
+              emptySrc="/empty-states/no-events.svg"
+            />
+          }
+        />
+        <Route path="/error/forbidden" element={<AppErrorPage kind="forbidden" />} />
+        <Route path="/error/server" element={<AppErrorPage kind="server" />} />
+        <Route path="/error/network" element={<AppErrorPage kind="network" />} />
+        <Route path="*" element={<AppErrorPage kind="not-found" />} />
+      </Routes>
+    </AppShell>
   );
 }

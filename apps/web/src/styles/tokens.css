@@ -1,0 +1,41 @@
+:root {
+  color-scheme: light;
+  --canvas: #faf7f0;
+  --canvas-warm: #f2ebdd;
+  --surface: #ffffff;
+  --brand: #315c49;
+  --brand-hover: #254838;
+  --sage: #91a994;
+  --wood: #c89e69;
+  --ink: #252925;
+  --muted: #616b62;
+  --border: #dee3db;
+  --error: #b6453d;
+  --success: #276946;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --shadow-soft: 0 10px 30px rgba(37, 41, 37, 0.06);
+  --font: "Heebo", "Segoe UI", Tahoma, sans-serif;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --header-h: 72px;
+  --content-max: 1120px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

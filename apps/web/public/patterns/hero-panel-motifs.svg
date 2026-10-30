@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="900" viewBox="0 0 720 900" fill="none">
+  <!-- Soft Go-inspired motifs for the cream hero panel (decorative only) -->
+  <g opacity="0.55" stroke="#91a994" stroke-width="1.25">
+    <circle cx="520" cy="210" r="118" />
+    <circle cx="520" cy="210" r="78" />
+  </g>
+  <g opacity="0.4" stroke="#c89e69" stroke-width="1">
+    <circle cx="180" cy="640" r="96" />
+    <circle cx="180" cy="640" r="52" />
+  </g>
+  <g opacity="0.35" stroke="#616b62" stroke-width="1">
+    <path d="M420 520h72M456 484v72" />
+    <path d="M444 496h48M444 544h48M432 508v48M492 508v48" />
+    <circle cx="456" cy="520" r="3.5" fill="#91a994" stroke="none" />
+    <circle cx="492" cy="556" r="3.5" fill="#252925" stroke="none" opacity="0.55" />
+    <circle cx="420" cy="484" r="2.5" fill="#c89e69" stroke="none" />
+  </g>
+  <g opacity="0.3" fill="#91a994">
+    <circle cx="610" cy="380" r="4" />
+    <circle cx="640" cy="410" r="2.5" />
+    <circle cx="580" cy="430" r="3" />
+  </g>
+</svg>

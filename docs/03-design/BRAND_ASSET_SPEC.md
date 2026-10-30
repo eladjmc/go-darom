@@ -5,6 +5,8 @@
 ## Exact source mapping
 - Logo #2 selected original: `assets/source/BR-REF-002-selected-brand-board.png` (generated brand BOARD).
 - Hero #3 selected original: `assets/source/HR-001-selected-hero-original.png`.
+- Hero RTL board-left variant (owner-provided flip): `assets/source/HR-001b-selected-hero-rtl-board-left.png` → web `home-hero-rtl-board-left.webp`.
+- Hero minimal natural (owner-provided, board left / open right, no plate shadow; current homepage): `assets/source/HR-001c-selected-hero-minimal-natural.png` → web `home-hero-minimal-natural.webp`.
 - Source art must not be replaced with unrelated image searches or regenerated approximations.
 
 ## Deliverables available NOW

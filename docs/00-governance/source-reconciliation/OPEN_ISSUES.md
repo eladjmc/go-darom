@@ -14,7 +14,7 @@
 | OPEN-008 | P1 | Study Board undo/redo conflicts: another user editing immediately after undo; how user-facing toast/history works. | Document server operation log, global undo stack and revision/version safeguards. |
 | OPEN-009 | P1 | Whether users may download/share completed game SGF or expose public replay links was discussed only as future possibility. | Keep private replay; consider sharing later only if explicitly approved. |
 | OPEN-010 | P1 | Detailed account deletion rules for DMs, public posts, event photos, reports, active async games, and retention under legal constraints. | Privacy data lifecycle matrix before release, respecting agreed anonymization. |
-| OPEN-011 | P1 | Report context length ('several adjacent messages') not fixed; can include third parties' content. | Specify fixed bounded window and audit access before moderation LLD. |
+| OPEN-011 | P1 | Report context length ('several adjacent messages') not fixed; can include third parties' content. | **Resolved for M3 (2026-10-30):** ±5 messages by thread sequence + reported message; report-scoped admin access only; audit log on DM evidence read. |
 | OPEN-012 | P1 | Guest email verification: token expiry/retries, existing member email collision, cancellation link security, duplicate submissions, event cancellation while pending. | Events LLD and security review; no need to reopen approved 15-minute reservation. |
 | OPEN-013 | P1 | Guest record deletion after 90d may conflict with future retention of public aggregate event attendance, exports, send logs or backup retention. | Separate PII records from anonymous event counts; define backup lifetime and manual export guidance. |
 | OPEN-014 | P1 | Brevo account-level requirements, verified sending domain, free-plan limits, deliverability and retries are environment-dependent. | Provider integration checklist and sandbox/local test strategy; provider itself is approved. |
@@ -30,7 +30,7 @@
 | OPEN-024 | P2 | Rules for retaining admin audit logs and notifications beyond initial suggested 90 days; no final user approval of automatic notification pruning. | Specify retention separately. |
 | OPEN-025 | P2 | Exact source-of-truth precedence between product requirements, ADRs, contracts and LLD needs section ownership to avoid circular conflicts. | Governance policy with conflict escalation rather than simplistic document ranking. |
 | OPEN-026 | P2 | Public site SEO, social share metadata and pre-rendering strategy are discussed as direction, not implementation contract. | HLD performance/SEO assessment. |
-| OPEN-027 | P2 | Public member presence excludes unauthenticated visitors; presence accuracy during rapid reconnect and multi-tab race cases. | Realtime LLD. |
+| OPEN-027 | P2 | Public member presence excludes unauthenticated visitors; presence accuracy during rapid reconnect and multi-tab race cases. | **M3 presence policy (2026-10-30):** guests excluded; multi-tab = one online; 10s offline debounce cancelable on reconnect. |
 
 ## Corrections / caution about earlier assistant statements
 

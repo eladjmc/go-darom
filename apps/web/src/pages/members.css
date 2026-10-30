@@ -1,0 +1,259 @@
+.members-page {
+  max-width: 40rem;
+}
+
+.members-search {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.members-search input {
+  flex: 1;
+  min-height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 0.6rem 0.8rem;
+  font: inherit;
+  background: #fff;
+}
+
+.members-search input:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.members-error {
+  color: var(--error);
+  margin: 0 0 1rem;
+}
+
+.member-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.member-list li,
+.member-row {
+  display: flex;
+  gap: 0.55rem;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.35rem 0.55rem;
+  min-height: 44px;
+}
+
+.member-list-compact {
+  gap: 0.35rem;
+}
+
+.member-list img,
+.member-avatar-fallback {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.member-avatar-fallback {
+  display: grid;
+  place-items: center;
+  background: rgba(145, 169, 148, 0.18);
+  color: var(--brand);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.member-row-main {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 0.1rem;
+}
+
+.member-row-main strong {
+  font-size: 0.95rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.member-row-actions {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.btn-compact {
+  min-height: 34px;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.85rem;
+}
+
+.online,
+.offline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  line-height: 1.2;
+}
+
+.online {
+  color: var(--success);
+}
+
+.offline {
+  color: var(--muted);
+}
+
+.presence-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: rgba(120, 120, 120, 0.45);
+  flex-shrink: 0;
+}
+
+.presence-dot.is-on {
+  background: var(--success);
+  box-shadow: 0 0 0 2px rgba(49, 92, 73, 0.15);
+}
+
+/* Online-only toggle */
+.toggle-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.toggle-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.toggle-switch-track {
+  position: relative;
+  width: 2.75rem;
+  height: 1.55rem;
+  border-radius: 999px;
+  background: rgba(145, 169, 148, 0.35);
+  border: 1px solid rgba(49, 92, 73, 0.28);
+  transition: background 160ms ease, border-color 160ms ease;
+  flex-shrink: 0;
+}
+
+.toggle-switch-thumb {
+  position: absolute;
+  top: 2px;
+  inset-inline-start: 2px;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(37, 41, 37, 0.2);
+  transition: inset-inline-start 160ms ease, inset-inline-end 160ms ease;
+}
+
+.toggle-switch input:checked + .toggle-switch-track {
+  background: var(--brand);
+  border-color: var(--brand);
+}
+
+.toggle-switch input:checked + .toggle-switch-track .toggle-switch-thumb {
+  inset-inline-start: calc(100% - 1.15rem - 2px);
+}
+
+.toggle-switch input:focus-visible + .toggle-switch-track {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+@media (max-width: 560px) {
+  .member-row {
+    flex-wrap: wrap;
+  }
+
+  .member-row-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+.member-skel {
+  pointer-events: none;
+}
+
+.member-skel-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(145, 169, 148, 0.16) 0%,
+    rgba(145, 169, 148, 0.28) 50%,
+    rgba(145, 169, 148, 0.16) 100%
+  );
+  background-size: 200% 100%;
+  animation: member-shimmer 1.2s ease-in-out infinite;
+}
+
+.member-skel-lines {
+  flex: 1;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.member-skel-line {
+  display: block;
+  height: 0.7rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(145, 169, 148, 0.14) 0%,
+    rgba(145, 169, 148, 0.26) 50%,
+    rgba(145, 169, 148, 0.14) 100%
+  );
+  background-size: 200% 100%;
+  animation: member-shimmer 1.2s ease-in-out infinite;
+}
+
+.member-skel-line.is-name {
+  width: 42%;
+}
+
+.member-skel-line.is-status {
+  width: 28%;
+  height: 0.55rem;
+  opacity: 0.85;
+}
+
+@keyframes member-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .member-skel-avatar,
+  .member-skel-line {
+    animation: none;
+  }
+}

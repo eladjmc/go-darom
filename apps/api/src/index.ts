@@ -1,20 +1,77 @@
+import { createServer } from "node:http";
 import { HealthService } from "./app/health-service.js";
 import { loadEnv } from "./config/env.js";
 import { createApp } from "./create-app.js";
 import { createDb } from "./infra/db/client.js";
+import { ChatService } from "./modules/chat/chat-service.js";
+import { ClerkTokenVerifier } from "./modules/identity/clerk-token-verifier.js";
+import { IdentityService } from "./modules/identity/identity-service.js";
+import { DevStubTokenVerifier } from "./modules/identity/token-verifier.js";
+import { UserRepository } from "./modules/identity/user-repository.js";
+import { NotificationService } from "./modules/notifications/notification-service.js";
+import { ModerationService } from "./modules/trust/moderation-service.js";
+import { TrustService } from "./modules/trust/trust-service.js";
+import { PresenceRegistry } from "./realtime/presence-registry.js";
+import { attachSocketServer } from "./realtime/socket-server.js";
 
 async function main() {
   const env = loadEnv();
-  const { pool } = createDb(env.databaseUrl);
+  const { db, pool } = createDb(env.databaseUrl);
   const healthService = new HealthService(pool, env.version);
-  const app = createApp({ healthService, webOrigin: env.webOrigin });
+  const presence = new PresenceRegistry();
+  const users = new UserRepository(db);
 
-  const server = app.listen(env.apiPort, () => {
+  if (!env.identityDevStub && !env.clerkSecretKey) {
+    console.warn(
+      "[identity] CLERK_SECRET_KEY missing — set IDENTITY_DEV_STUB=true for local stub auth, or configure Clerk.",
+    );
+  }
+
+  const tokens = env.identityDevStub
+    ? new DevStubTokenVerifier()
+    : new ClerkTokenVerifier(env.clerkSecretKey);
+
+  const identityService = new IdentityService(
+    users,
+    tokens,
+    presence,
+    new Set(env.bootstrapAdminClerkIds),
+  );
+
+  const trustService = new TrustService(db);
+  const notificationService = new NotificationService(db);
+  const chatService = new ChatService(db, trustService, notificationService);
+  await chatService.ensureCommunityThread();
+  const moderationService = new ModerationService(db, chatService, identityService);
+
+  const app = createApp({
+    healthService,
+    identityService,
+    chatService,
+    trustService,
+    notificationService,
+    moderationService,
+    webOrigin: env.webOrigin,
+  });
+  const httpServer = createServer(app);
+  attachSocketServer({
+    httpServer,
+    webOrigin: env.webOrigin,
+    identity: identityService,
+    presence,
+    chat: chatService,
+    notifications: notificationService,
+  });
+
+  httpServer.listen(env.apiPort, () => {
     console.log(`Go Darom API listening on :${env.apiPort}`);
+    if (env.identityDevStub) {
+      console.log("[identity] DEV stub enabled — Authorization: Bearer stub:<clerkUserId>");
+    }
   });
 
   const shutdown = async () => {
-    server.close();
+    httpServer.close();
     await pool.end();
     process.exit(0);
   };

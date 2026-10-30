@@ -8,10 +8,10 @@ coverage/
 *.log
 .DS_Store
 Thumbs.db
-apps/api/drizzle/meta/
 .vite/
 *.tsbuildinfo
 .turbo/
 .idea/
+.history/
 .vscode/*
 !.vscode/extensions.json

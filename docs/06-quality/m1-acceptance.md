@@ -5,20 +5,20 @@
 
 ## Foundation
 
-| ID | Scenario | Expected |
-|---|---|---|
-| ACC-F-01 | `docker compose up -d` | Postgres healthy |
-| ACC-F-02 | Apply Drizzle migrations | Succeeds |
-| ACC-F-03 | `GET /health` with DB up | `status: ok`, `db: up` |
-| ACC-F-04 | Web stub loads | `dir=rtl`, Hebrew title גו דרום |
-| ACC-F-05 | `npm run typecheck` | Exit 0 |
-| ACC-F-06 | `npm run lint` | Exit 0 |
-| ACC-F-07 | `.env.example` present; no live secrets in git | Pass |
-| ACC-F-08 | CI workflow file present | Pass |
+| ID | Scenario | Expected | Result (2026-10-29) |
+|---|---|---|---|
+| ACC-F-01 | `docker compose up -d` | Postgres healthy | **PASS** |
+| ACC-F-02 | `npm run db:migrate` | Succeeds | **PASS** |
+| ACC-F-03 | `GET /health` with DB up | `status: ok`, `db: up` | **PASS** `{"status":"ok","db":"up","version":"0.1.0-m1"}` |
+| ACC-F-04 | Web stub loads | `dir=rtl`, Hebrew title גו דרום | **PASS** (source + build) |
+| ACC-F-05 | `npm run typecheck` | Exit 0 | **PASS** |
+| ACC-F-06 | `npm run lint` | Exit 0 | **PASS** |
+| ACC-F-07 | `.env.example` present; no live secrets in git | Pass | **PASS** (`.env` gitignored) |
+| ACC-F-08 | CI workflow file present | Pass | **PASS** (`.github/workflows/ci.yml`) |
 
 ## Engine POC
 
-See `go-engine-poc-matrix.md`. Suite must be executed via `npm run poc:go-engine` (or equivalent).
+See `go-engine-poc-matrix.md` — **20/20 executed tests passed**.
 
 ## Sign-off
 
