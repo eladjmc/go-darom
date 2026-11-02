@@ -1,8 +1,21 @@
-import { Bell, Home, Menu, MessageCircle, ShoppingBag, Users, X, type LucideIcon } from "lucide-react";
+import {
+  Bell,
+  ChevronDown,
+  Home,
+  Menu,
+  MessageCircle,
+  ShoppingBag,
+  Users,
+  X,
+  type LucideIcon,
+} from "lucide-react";
 import { APP_ICONS, type AppIconName } from "./productIcons";
 import "./app-icon.css";
 
-const LUCIDE: Record<"home" | "community" | "shop" | "menu" | "close" | "messages" | "bell", LucideIcon> = {
+const LUCIDE: Record<
+  "home" | "community" | "shop" | "menu" | "close" | "messages" | "bell" | "chevron",
+  LucideIcon
+> = {
   home: Home,
   community: Users,
   shop: ShoppingBag,
@@ -10,6 +23,7 @@ const LUCIDE: Record<"home" | "community" | "shop" | "menu" | "close" | "message
   close: X,
   messages: MessageCircle,
   bell: Bell,
+  chevron: ChevronDown,
 };
 
 type Props = {

@@ -16,6 +16,7 @@ describe("isAllowedReturnIntent", () => {
   it("allows internal prefixes only", () => {
     expect(isAllowedReturnIntent("/me")).toBe(true);
     expect(isAllowedReturnIntent("/members")).toBe(true);
+    expect(isAllowedReturnIntent("/messages/conv-1")).toBe(true);
     expect(isAllowedReturnIntent("/play/invite")).toBe(true);
     expect(isAllowedReturnIntent("https://evil.example")).toBe(false);
     expect(isAllowedReturnIntent("//evil.example")).toBe(false);

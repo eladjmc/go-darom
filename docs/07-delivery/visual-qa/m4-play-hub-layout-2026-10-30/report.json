@@ -1,0 +1,151 @@
+{
+  "date": "2026-10-30T20:30:01.026Z",
+  "web": "http://localhost:5173",
+  "shots": [
+    {
+      "name": "desktop-1280-empty",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-play-hub-layout-2026-10-30\\desktop-1280-empty.png",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      }
+    },
+    {
+      "name": "desktop-1280-active",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-play-hub-layout-2026-10-30\\desktop-1280-active.png",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      }
+    },
+    {
+      "name": "desktop-1280-incoming",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-play-hub-layout-2026-10-30\\desktop-1280-incoming.png",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      }
+    },
+    {
+      "name": "desktop-1280-outgoing",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-play-hub-layout-2026-10-30\\desktop-1280-outgoing.png",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      }
+    },
+    {
+      "name": "desktop-1280-multi",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-play-hub-layout-2026-10-30\\desktop-1280-multi.png",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      }
+    },
+    {
+      "name": "desktop-1280-expired",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-play-hub-layout-2026-10-30\\desktop-1280-expired.png",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      }
+    },
+    {
+      "name": "desktop-1440-empty",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-play-hub-layout-2026-10-30\\desktop-1440-empty.png",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "desktop-1440-active",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-play-hub-layout-2026-10-30\\desktop-1440-active.png",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "desktop-1440-multi",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-play-hub-layout-2026-10-30\\desktop-1440-multi.png",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "mobile-360-empty",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-play-hub-layout-2026-10-30\\mobile-360-empty.png",
+      "viewport": {
+        "width": 360,
+        "height": 740
+      }
+    },
+    {
+      "name": "mobile-390-empty",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-play-hub-layout-2026-10-30\\mobile-390-empty.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "mobile-360-active",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-play-hub-layout-2026-10-30\\mobile-360-active.png",
+      "viewport": {
+        "width": 360,
+        "height": 740
+      }
+    },
+    {
+      "name": "mobile-390-active",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-play-hub-layout-2026-10-30\\mobile-390-active.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "mobile-360-incoming",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-play-hub-layout-2026-10-30\\mobile-360-incoming.png",
+      "viewport": {
+        "width": 360,
+        "height": 740
+      }
+    },
+    {
+      "name": "mobile-390-incoming",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-play-hub-layout-2026-10-30\\mobile-390-incoming.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "mobile-360-multi",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-play-hub-layout-2026-10-30\\mobile-360-multi.png",
+      "viewport": {
+        "width": 360,
+        "height": 740
+      }
+    },
+    {
+      "name": "mobile-390-multi",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-play-hub-layout-2026-10-30\\mobile-390-multi.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "mobile-430-multi",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-play-hub-layout-2026-10-30\\mobile-430-multi.png",
+      "viewport": {
+        "width": 430,
+        "height": 900
+      }
+    }
+  ],
+  "errors": []
+}

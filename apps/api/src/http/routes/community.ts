@@ -239,6 +239,17 @@ export function createCommunityRouters(deps: {
     }
   });
 
+  notificationRouter.post("/notifications/dismiss", auth, async (req: AuthedRequest, res) => {
+    const actor = requireActor(req, res);
+    if (!actor) return;
+    try {
+      await deps.identity.requireOnboarded(actor);
+      res.json(await deps.notifications.dismiss(actor, req.body ?? {}));
+    } catch (err) {
+      if (!handleAuthError(err, res)) throw err;
+    }
+  });
+
   adminModRouter.get("/admin/reports", auth, async (req: AuthedRequest, res) => {
     const actor = requireActor(req, res);
     if (!actor) return;

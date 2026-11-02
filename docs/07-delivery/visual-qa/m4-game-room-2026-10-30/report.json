@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-30T19:34:37.238Z",
+  "web": "http://localhost:5173",
+  "shots": [
+    "desktop-1280x720",
+    "desktop-1440x900",
+    "desktop-1920x1080",
+    "mobile-360",
+    "mobile-390",
+    "mobile-430"
+  ],
+  "errors": []
+}

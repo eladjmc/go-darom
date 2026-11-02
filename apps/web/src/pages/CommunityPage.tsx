@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import type { ChatMessageDto, MemberListItem } from "@go-darom/shared";
 import { useAuth } from "../auth/AuthContext";
 import {
@@ -15,17 +15,27 @@ import { rememberReturnIntent } from "../auth/return-intent";
 import { ChatComposer } from "../components/chat/ChatComposer";
 import { MessageThread } from "../components/chat/MessageThread";
 import { useRealtime } from "../realtime/RealtimeProvider";
+import {
+  COMMUNITY_CHAT_PATH,
+  COMMUNITY_PATH,
+  messagesConversationPath,
+} from "../routing/chatRoutes";
 import "./community.css";
 import "./members.css";
 import "./messaging.css";
 
 type Tab = "chat" | "members";
 
+function tabFromPath(pathname: string): Tab {
+  return pathname.startsWith(COMMUNITY_CHAT_PATH) ? "chat" : "members";
+}
+
 export function CommunityPage() {
   const { me, token, loading } = useAuth();
   const { socket, onlineIds } = useRealtime();
   const navigate = useNavigate();
-  const [tab, setTab] = useState<Tab>("chat");
+  const location = useLocation();
+  const tab = tabFromPath(location.pathname);
   const [messages, setMessages] = useState<ChatMessageDto[]>([]);
   const [chatPhase, setChatPhase] = useState<"loading" | "ready" | "error">("loading");
   const [chatError, setChatError] = useState<string | null>(null);
@@ -151,7 +161,7 @@ export function CommunityPage() {
             <Link
               className="btn btn-primary"
               to="/sign-in"
-              onClick={() => rememberReturnIntent("/community")}
+              onClick={() => rememberReturnIntent(`${location.pathname}${location.search}`)}
             >
               התחברות עם Google
             </Link>
@@ -185,44 +195,46 @@ export function CommunityPage() {
     if (!token) return;
     try {
       const { threadId } = await openDmThread(token, peerUserId);
-      navigate(`/dms/${threadId}`);
+      navigate(messagesConversationPath(threadId));
     } catch (err) {
       setChatError(err instanceof Error ? err.message : "פתיחת שיחה נכשלה");
     }
   };
 
+  const chatFocus = tab === "chat";
+
   return (
-    <section className="section messaging-page">
-      <div className="container community-page community-layout">
-        <h1 className="section-title">הקהילה</h1>
-        <p className="section-lede">צ׳אט מרכזי וחברים — בלי אימיילים ציבוריים.</p>
+    <section className={`section messaging-page${chatFocus ? " is-chat-focus" : ""}`}>
+      <div className="chat-frame">
+        <div className="chat-frame-head">
+          <h1 className="section-title">הקהילה</h1>
+          <p className="section-lede">צ׳אט מרכזי וחברים — בלי אימיילים ציבוריים.</p>
 
-        <div className="community-tabs" role="tablist" aria-label="אזור קהילה">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={tab === "chat"}
-            className={`tab${tab === "chat" ? " is-active" : ""}`}
-            onClick={() => setTab("chat")}
-          >
-            צ׳אט
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={tab === "members"}
-            className={`tab${tab === "members" ? " is-active" : ""}`}
-            onClick={() => setTab("members")}
-          >
-            חברים
-          </button>
+          <div className="community-tabs" role="tablist" aria-label="אזור קהילה">
+            <Link
+              role="tab"
+              aria-selected={tab === "chat"}
+              className={`tab${tab === "chat" ? " is-active" : ""}`}
+              to={COMMUNITY_CHAT_PATH}
+            >
+              צ׳אט
+            </Link>
+            <Link
+              role="tab"
+              aria-selected={tab === "members"}
+              className={`tab${tab === "members" ? " is-active" : ""}`}
+              to={COMMUNITY_PATH}
+            >
+              חברים
+            </Link>
+          </div>
+
+          {chatError && (
+            <p className="members-error" role="alert">
+              {chatError}
+            </p>
+          )}
         </div>
-
-        {chatError && (
-          <p className="members-error" role="alert">
-            {chatError}
-          </p>
-        )}
 
         {tab === "chat" && (
           <div className="msg-shell community-chat-wrap" aria-label="צ׳אט הקהילה">
@@ -264,7 +276,7 @@ export function CommunityPage() {
         )}
 
         {tab === "members" && (
-          <div className="members-directory">
+          <div className="members-directory community-directory">
             <div className="filter-row">
               <form
                 className="members-search"
@@ -316,8 +328,12 @@ export function CommunityPage() {
                     </div>
                     {member.id !== me.id && (
                       <div className="member-row-actions">
-                        <button type="button" className="btn btn-secondary btn-compact" onClick={() => void startDm(member.id)}>
-                          הודעה
+                        <button
+                          type="button"
+                          className="btn btn-secondary btn-compact"
+                          onClick={() => void startDm(member.id)}
+                        >
+                          הודעה פרטית
                         </button>
                         <button
                           type="button"
@@ -325,7 +341,9 @@ export function CommunityPage() {
                           onClick={() =>
                             void blockUser(token!, member.id)
                               .then(() => setChatError(`${member.nickname} נחסם/ה`))
-                              .catch((e: unknown) => setChatError(e instanceof Error ? e.message : "חסימה נכשלה"))
+                              .catch((e: unknown) =>
+                                setChatError(e instanceof Error ? e.message : "חסימה נכשלה"),
+                              )
                           }
                         >
                           חסימה

@@ -27,4 +27,9 @@ describe("return intent", () => {
     rememberReturnIntent("/me");
     expect(consumeReturnIntent("/")).toBe("/me");
   });
+
+  it("preserves private conversation return-intent after Google auth", () => {
+    rememberReturnIntent("/messages/conv-42");
+    expect(consumeReturnIntent("/")).toBe("/messages/conv-42");
+  });
 });

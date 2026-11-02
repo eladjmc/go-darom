@@ -1,0 +1,101 @@
+{
+  "date": "2026-11-02T10:26:55.167Z",
+  "web": "http://localhost:5175",
+  "shots": [
+    {
+      "name": "desktop-default",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-resign-modal-2026-11-02\\desktop-default.png",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "scene": "resign"
+    },
+    {
+      "name": "desktop-focus-cancel",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-resign-modal-2026-11-02\\desktop-focus-cancel.png",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "scene": "resign"
+    },
+    {
+      "name": "desktop-hover-confirm",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-resign-modal-2026-11-02\\desktop-hover-confirm.png",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "scene": "resign"
+    },
+    {
+      "name": "desktop-loading",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-resign-modal-2026-11-02\\desktop-loading.png",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "scene": "resign-busy"
+    },
+    {
+      "name": "mobile-default",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-resign-modal-2026-11-02\\mobile-default.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "scene": "resign"
+    },
+    {
+      "name": "mobile-loading",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-resign-modal-2026-11-02\\mobile-loading.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "scene": "resign-busy"
+    }
+  ],
+  "checks": [
+    {
+      "label": "check-desktop-chrome",
+      "scene": "resign",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "ok": true,
+      "title": "כניעה מהמשחק",
+      "ariaModal": "true",
+      "card": {
+        "top": 254.671875,
+        "bottom": 465.328125,
+        "width": 266.3125,
+        "height": 210.65625
+      },
+      "vh": 720,
+      "vw": 1280
+    },
+    {
+      "label": "check-mobile-chrome",
+      "scene": "resign",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "ok": true,
+      "title": "כניעה מהמשחק",
+      "ariaModal": "true",
+      "card": {
+        "top": 288.875,
+        "bottom": 555.109375,
+        "width": 266.3125,
+        "height": 266.234375
+      },
+      "vh": 844,
+      "vw": 390
+    }
+  ],
+  "errors": []
+}

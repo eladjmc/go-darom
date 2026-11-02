@@ -6,6 +6,12 @@ import { App } from "./App";
 import { AuthProvider } from "./auth/AuthContext";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { DevGobanPoc } from "./dev/DevGobanPoc";
+import { GobanBrowserSmoke } from "./dev/GobanBrowserSmoke";
+import { GameRoomSmoke } from "./dev/GameRoomSmoke";
+import { InviteNotificationSmoke } from "./dev/InviteNotificationSmoke";
+import { PlayHubSmoke } from "./dev/PlayHubSmoke";
+import { InviteFlowSmoke } from "./dev/InviteFlowSmoke";
+import { DmInviteSmoke } from "./dev/DmInviteSmoke";
 import "./styles/global.css";
 import "./pages/auth.css";
 
@@ -16,6 +22,12 @@ if (!root) {
 
 const path = window.location.pathname.replace(/\/+$/, "") || "/";
 const isDevGobanPoc = import.meta.env.DEV && path === "/dev/goban-poc";
+const isDevGobanSmoke = import.meta.env.DEV && path === "/dev/goban-browser-smoke";
+const isDevInviteNotifSmoke = import.meta.env.DEV && path === "/dev/invite-notification-smoke";
+const isDevGameRoomSmoke = import.meta.env.DEV && path === "/dev/game-room-smoke";
+const isDevPlayHubSmoke = import.meta.env.DEV && path === "/dev/play-hub-smoke";
+const isDevInviteFlowSmoke = import.meta.env.DEV && path === "/dev/invite-flow-smoke";
+const isDevDmInviteSmoke = import.meta.env.DEV && path === "/dev/dm-invite-smoke";
 
 function useClerkSessionToken(
   getToken: (options?: { skipCache?: boolean }) => Promise<string | null>,
@@ -109,6 +121,22 @@ function Root() {
 
 createRoot(root).render(
   <StrictMode>
-    {isDevGobanPoc ? <DevGobanPoc /> : <Root />}
+    {isDevGobanPoc ? (
+      <DevGobanPoc />
+    ) : isDevGobanSmoke ? (
+      <GobanBrowserSmoke />
+    ) : isDevInviteNotifSmoke ? (
+      <InviteNotificationSmoke />
+    ) : isDevGameRoomSmoke ? (
+      <GameRoomSmoke />
+    ) : isDevPlayHubSmoke ? (
+      <PlayHubSmoke />
+    ) : isDevInviteFlowSmoke ? (
+      <InviteFlowSmoke />
+    ) : isDevDmInviteSmoke ? (
+      <DmInviteSmoke />
+    ) : (
+      <Root />
+    )}
   </StrictMode>,
 );

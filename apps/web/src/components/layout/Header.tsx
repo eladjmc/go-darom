@@ -5,8 +5,14 @@ import { AppIcon } from "../icons/AppIcon";
 import type { AppIconName } from "../icons/productIcons";
 import { useAuth } from "../../auth/AuthContext";
 import { rememberReturnIntent } from "../../auth/return-intent";
+import { NotificationCenter } from "../../notifications/NotificationCenter";
+import {
+  OPEN_NOTIFICATIONS_EVENT,
+  type OpenNotificationsDetail,
+} from "../../notifications/openNotificationCenter";
 import { useRealtime } from "../../realtime/RealtimeProvider";
 import { BrandMark } from "./BrandMark";
+import "../../notifications/notification-center.css";
 
 const NAV: Array<{
   to: string;
@@ -23,24 +29,45 @@ const NAV: Array<{
 ];
 
 const DRAWER_MS = 200;
+const NARROW_MQ = "(max-width: 900px)";
 
 function prefersReducedMotion() {
   return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
+function useIsNarrow() {
+  const [narrow, setNarrow] = useState(() =>
+    typeof window !== "undefined" ? window.matchMedia(NARROW_MQ).matches : false,
+  );
+  useEffect(() => {
+    const mq = window.matchMedia(NARROW_MQ);
+    const onChange = () => setNarrow(mq.matches);
+    onChange();
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  return narrow;
+}
+
 type DrawerPhase = "closed" | "opening" | "open" | "closing";
 
 export function Header() {
-  const { me, mode, setDevStubUser, signOut } = useAuth();
+  const { me, token, mode, setDevStubUser, signOut } = useAuth();
   const { unreadNotifications, unreadDmTotal } = useRealtime();
   const location = useLocation();
   const navigate = useNavigate();
+  const isNarrow = useIsNarrow();
   const [phase, setPhase] = useState<DrawerPhase>("closed");
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [focusInviteId, setFocusInviteId] = useState<string | null>(null);
+  const [bellAnchor, setBellAnchor] = useState<HTMLElement | null>(null);
   const drawerId = useId();
   const titleId = useId();
   const toggleRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
+  const desktopBellRef = useRef<HTMLButtonElement>(null);
+  const mobileBellRef = useRef<HTMLButtonElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
   const closeTimer = useRef<number | null>(null);
   const openRaf = useRef<number | null>(null);
@@ -98,6 +125,7 @@ export function Header() {
 
   const openDrawer = () => {
     if (phase !== "closed") return;
+    setNotifOpen(false);
     previouslyFocused.current = document.activeElement as HTMLElement | null;
     document.body.style.overflow = "hidden";
     setPhase("opening");
@@ -149,6 +177,45 @@ export function Header() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [phase, beginClose]);
 
+  const closeNotifications = useCallback(() => {
+    setNotifOpen(false);
+    setFocusInviteId(null);
+    (bellAnchor ?? desktopBellRef.current ?? mobileBellRef.current)?.focus?.();
+  }, [bellAnchor]);
+
+  const openNotifications = useCallback(
+    (opts?: { inviteId?: string; anchor?: HTMLElement | null }) => {
+      beginClose();
+      if (opts?.inviteId) setFocusInviteId(opts.inviteId);
+      if (opts?.anchor) setBellAnchor(opts.anchor);
+      else setBellAnchor(isNarrow ? mobileBellRef.current : desktopBellRef.current);
+      setNotifOpen(true);
+    },
+    [beginClose, isNarrow],
+  );
+
+  useEffect(() => {
+    const onOpen = (event: Event) => {
+      const detail = (event as CustomEvent<OpenNotificationsDetail>).detail ?? {};
+      openNotifications({ inviteId: detail.inviteId });
+    };
+    window.addEventListener(OPEN_NOTIFICATIONS_EVENT, onOpen);
+    return () => window.removeEventListener(OPEN_NOTIFICATIONS_EVENT, onOpen);
+  }, [openNotifications]);
+
+  useEffect(() => {
+    const st = location.state as { notifications?: OpenNotificationsDetail } | null;
+    if (!st?.notifications) return;
+    const detail = st.notifications;
+    navigate(`${location.pathname}${location.search}`, { replace: true, state: null });
+    window.setTimeout(() => openNotifications({ inviteId: detail.inviteId }), 0);
+  }, [location.state, location.pathname, location.search, navigate, openNotifications]);
+
+  useEffect(() => {
+    setNotifOpen(false);
+    setFocusInviteId(null);
+  }, [location.pathname]);
+
   const goSignIn = () => {
     rememberReturnIntent(`${location.pathname}${location.search}`);
     beginClose(() => {
@@ -177,26 +244,49 @@ export function Header() {
 
   const badgeLabel = (n: number) => (n > 99 ? "99+" : String(n));
 
+  const bellButton = (ref: typeof desktopBellRef, className: string) =>
+    me ? (
+      <button
+        ref={ref}
+        type="button"
+        className={`header-icon-btn header-bell-btn ${className}`.trim()}
+        aria-label={
+          unreadNotifications > 0
+            ? `התראות מערכת, ${unreadNotifications} לא נקראו`
+            : "התראות מערכת"
+        }
+        aria-expanded={notifOpen}
+        aria-controls={notifOpen ? "go-darom-notification-center" : undefined}
+        aria-haspopup="dialog"
+        onClick={(event) => {
+          if (notifOpen) {
+            closeNotifications();
+            return;
+          }
+          openNotifications({ anchor: event.currentTarget });
+        }}
+      >
+        <AppIcon name="bell" size={20} />
+        {unreadNotifications > 0 && <span className="notif-badge">{badgeLabel(unreadNotifications)}</span>}
+      </button>
+    ) : null;
+
   const authDesktop = me ? (
     <>
+      {me.role === "admin" && (
+        <Link className="btn btn-secondary" to="/admin">
+          ניהול
+        </Link>
+      )}
       <Link
         className="header-icon-btn"
-        to="/dms"
+        to="/messages"
         aria-label={unreadDmTotal > 0 ? `הודעות פרטיות, ${unreadDmTotal} לא נקראו` : "הודעות פרטיות"}
       >
         <AppIcon name="messages" size={20} />
         {unreadDmTotal > 0 && <span className="notif-badge">{badgeLabel(unreadDmTotal)}</span>}
       </Link>
-      <Link
-        className="header-icon-btn"
-        to="/notifications"
-        aria-label={
-          unreadNotifications > 0 ? `התראות מערכת, ${unreadNotifications} לא נקראו` : "התראות מערכת"
-        }
-      >
-        <AppIcon name="bell" size={20} />
-        {unreadNotifications > 0 && <span className="notif-badge">{badgeLabel(unreadNotifications)}</span>}
-      </Link>
+      {bellButton(desktopBellRef, "")}
       <Link className="btn btn-primary" to="/me">
         {me.nickname ?? "האזור שלי"}
       </Link>
@@ -212,12 +302,21 @@ export function Header() {
 
   const authDrawer = me ? (
     <>
-      <a className="btn btn-secondary" href="/dms" onClick={navigateFromDrawer("/dms")}>
+      {me.role === "admin" && (
+        <a className="btn btn-secondary" href="/admin" onClick={navigateFromDrawer("/admin")}>
+          ניהול
+        </a>
+      )}
+      <a className="btn btn-secondary" href="/messages" onClick={navigateFromDrawer("/messages")}>
         הודעות{unreadDmTotal > 0 ? ` (${badgeLabel(unreadDmTotal)})` : ""}
       </a>
-      <a className="btn btn-secondary" href="/notifications" onClick={navigateFromDrawer("/notifications")}>
+      <button
+        type="button"
+        className="btn btn-secondary"
+        onClick={() => beginClose(() => openNotifications({}))}
+      >
         התראות{unreadNotifications > 0 ? ` (${badgeLabel(unreadNotifications)})` : ""}
-      </a>
+      </button>
       <a className="btn btn-primary" href="/me" onClick={navigateFromDrawer("/me")}>
         {me.nickname ?? "האזור שלי"}
       </a>
@@ -301,20 +400,48 @@ export function Header() {
           </ul>
         </nav>
         <div className="header-actions header-actions-desktop">{authDesktop}</div>
-        <button
-          ref={toggleRef}
-          type="button"
-          className="nav-toggle"
-          aria-expanded={phase === "open" || phase === "opening"}
-          aria-controls={drawerId}
-          aria-haspopup="dialog"
-          onClick={openDrawer}
-        >
-          <AppIcon name="menu" size={22} />
-          <span className="visually-hidden">פתיחת תפריט</span>
-        </button>
+        <div className="header-mobile-end">
+          {me ? (
+            <div className="header-mobile-tools">
+              <Link
+                className="header-icon-btn"
+                to="/messages"
+                aria-label={
+                  unreadDmTotal > 0 ? `הודעות פרטיות, ${unreadDmTotal} לא נקראו` : "הודעות פרטיות"
+                }
+              >
+                <AppIcon name="messages" size={20} />
+                {unreadDmTotal > 0 && <span className="notif-badge">{badgeLabel(unreadDmTotal)}</span>}
+              </Link>
+              {bellButton(mobileBellRef, "")}
+            </div>
+          ) : null}
+          <button
+            ref={toggleRef}
+            type="button"
+            className="nav-toggle"
+            aria-expanded={phase === "open" || phase === "opening"}
+            aria-controls={drawerId}
+            aria-haspopup="dialog"
+            onClick={openDrawer}
+          >
+            <AppIcon name="menu" size={22} />
+            <span className="visually-hidden">פתיחת תפריט</span>
+          </button>
+        </div>
       </div>
       {drawer}
+      {me && token ? (
+        <NotificationCenter
+          open={notifOpen}
+          onClose={closeNotifications}
+          token={token}
+          unreadCount={unreadNotifications}
+          focusInviteId={focusInviteId}
+          anchorEl={bellAnchor}
+          drawerMode={isNarrow}
+        />
+      ) : null}
     </header>
   );
 }

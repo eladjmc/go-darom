@@ -4,6 +4,9 @@ import { loadEnv } from "./config/env.js";
 import { createApp } from "./create-app.js";
 import { createDb } from "./infra/db/client.js";
 import { ChatService } from "./modules/chat/chat-service.js";
+import { GameChatService } from "./modules/games/game-chat-service.js";
+import { GameService } from "./modules/games/game-service.js";
+import { InvitationService } from "./modules/games/invitation-service.js";
 import { ClerkTokenVerifier } from "./modules/identity/clerk-token-verifier.js";
 import { IdentityService } from "./modules/identity/identity-service.js";
 import { DevStubTokenVerifier } from "./modules/identity/token-verifier.js";
@@ -43,6 +46,15 @@ async function main() {
   const chatService = new ChatService(db, trustService, notificationService);
   await chatService.ensureCommunityThread();
   const moderationService = new ModerationService(db, chatService, identityService);
+  const gameService = new GameService(db, notificationService, presence);
+  const gameChatService = new GameChatService(db);
+  const invitationService = new InvitationService(
+    db,
+    trustService,
+    notificationService,
+    presence,
+    gameService,
+  );
 
   const app = createApp({
     healthService,
@@ -51,6 +63,9 @@ async function main() {
     trustService,
     notificationService,
     moderationService,
+    invitationService,
+    gameService,
+    gameChatService,
     webOrigin: env.webOrigin,
   });
   const httpServer = createServer(app);
@@ -61,6 +76,8 @@ async function main() {
     presence,
     chat: chatService,
     notifications: notificationService,
+    games: gameService,
+    gameChat: gameChatService,
   });
 
   httpServer.listen(env.apiPort, () => {

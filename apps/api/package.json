@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@clerk/backend": "^3.26.4",
+    "@go-darom/go-engine": "0.1.0-m1",
     "@go-darom/shared": "0.1.0-m1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",

@@ -29,7 +29,8 @@ export const RETURN_INTENT_PREFIXES = [
   "/me",
   "/members",
   "/community",
-  "/dms",
+  "/messages",
+  "/dms", // legacy alias — redirected to /messages
   "/notifications",
   "/play",
   "/learn",

@@ -1,0 +1,39 @@
+{
+  "date": "2026-11-02T10:41:36.167Z",
+  "web": "http://localhost:5175",
+  "shots": [
+    {
+      "name": "desktop-hub-history",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-history-replay-2026-11-02\\desktop-hub-history.png",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      }
+    },
+    {
+      "name": "desktop-replay",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-history-replay-2026-11-02\\desktop-replay.png",
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      }
+    },
+    {
+      "name": "mobile-hub-history",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-history-replay-2026-11-02\\mobile-hub-history.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "mobile-replay",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-history-replay-2026-11-02\\mobile-replay.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    }
+  ],
+  "errors": []
+}

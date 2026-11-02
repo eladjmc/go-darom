@@ -5,14 +5,20 @@ import { notifications } from "../../infra/db/schema.js";
 import type { AuthenticatedActor } from "../identity/types.js";
 
 export type NotificationEmitter = (recipientId: string, notification: NotificationDto, toast: boolean) => void;
+export type NotificationDismissEmitter = (recipientId: string, ids: string[]) => void;
 
 export class NotificationService {
   private emit: NotificationEmitter | null = null;
+  private dismissEmit: NotificationDismissEmitter | null = null;
 
   constructor(private readonly db: Db["db"]) {}
 
   setEmitter(emit: NotificationEmitter) {
     this.emit = emit;
+  }
+
+  setDismissEmitter(emit: NotificationDismissEmitter) {
+    this.dismissEmit = emit;
   }
 
   async create(input: {
@@ -35,17 +41,21 @@ export class NotificationService {
 
   async list(actor: AuthenticatedActor, cursor?: string, limit = 30) {
     const lim = Math.min(Math.max(limit, 1), 50);
+    const scope = and(
+      eq(notifications.recipientId, actor.userId),
+      isNull(notifications.dismissedAt),
+    );
     const rows = cursor
       ? await this.db
           .select()
           .from(notifications)
-          .where(and(eq(notifications.recipientId, actor.userId), lt(notifications.createdAt, new Date(cursor))))
+          .where(and(scope, lt(notifications.createdAt, new Date(cursor))))
           .orderBy(desc(notifications.createdAt))
           .limit(lim)
       : await this.db
           .select()
           .from(notifications)
-          .where(eq(notifications.recipientId, actor.userId))
+          .where(scope)
           .orderBy(desc(notifications.createdAt))
           .limit(lim);
     return {
@@ -54,7 +64,7 @@ export class NotificationService {
     };
   }
 
-  /** Bell badge: unread system notifications only (excludes dm.message). */
+  /** Bell badge: unread system notifications only (excludes dm.message and dismissed). */
   async countSystemUnread(userId: string): Promise<number> {
     const rows = await this.db
       .select({ c: sql<number>`count(*)::int` })
@@ -63,6 +73,7 @@ export class NotificationService {
         and(
           eq(notifications.recipientId, userId),
           isNull(notifications.readAt),
+          isNull(notifications.dismissedAt),
           sql`${notifications.type} <> 'dm.message'`,
         ),
       );
@@ -74,7 +85,13 @@ export class NotificationService {
       await this.db
         .update(notifications)
         .set({ readAt: sql`now()` })
-        .where(and(eq(notifications.recipientId, actor.userId), isNull(notifications.readAt)));
+        .where(
+          and(
+            eq(notifications.recipientId, actor.userId),
+            isNull(notifications.readAt),
+            isNull(notifications.dismissedAt),
+          ),
+        );
       return { ok: true };
     }
     const ids = body.ids ?? [];
@@ -82,8 +99,42 @@ export class NotificationService {
     await this.db
       .update(notifications)
       .set({ readAt: sql`now()` })
-      .where(and(eq(notifications.recipientId, actor.userId), inArray(notifications.id, ids)));
+      .where(
+        and(
+          eq(notifications.recipientId, actor.userId),
+          inArray(notifications.id, ids),
+          isNull(notifications.dismissedAt),
+        ),
+      );
     return { ok: true };
+  }
+
+  /**
+   * Hide notifications for the current recipient only.
+   * Does not cancel game invites or delete rows for other users.
+   */
+  async dismiss(actor: AuthenticatedActor, body: { ids?: string[] }) {
+    const ids = (body.ids ?? []).filter(Boolean);
+    if (ids.length === 0) return { ok: true, ids: [] as string[] };
+    const updated = await this.db
+      .update(notifications)
+      .set({
+        dismissedAt: sql`now()`,
+        readAt: sql`coalesce(${notifications.readAt}, now())`,
+      })
+      .where(
+        and(
+          eq(notifications.recipientId, actor.userId),
+          inArray(notifications.id, ids),
+          isNull(notifications.dismissedAt),
+        ),
+      )
+      .returning({ id: notifications.id });
+    const dismissedIds = updated.map((r) => r.id);
+    if (dismissedIds.length > 0) {
+      this.dismissEmit?.(actor.userId, dismissedIds);
+    }
+    return { ok: true, ids: dismissedIds };
   }
 
   private toDto(row: typeof notifications.$inferSelect): NotificationDto {
@@ -92,6 +143,7 @@ export class NotificationService {
       type: row.type,
       payload: row.payload,
       readAt: row.readAt?.toISOString() ?? null,
+      dismissedAt: row.dismissedAt?.toISOString() ?? null,
       createdAt: row.createdAt.toISOString(),
     };
   }

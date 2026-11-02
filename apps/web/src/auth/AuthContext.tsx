@@ -99,6 +99,17 @@ export function AuthProvider({
   );
 
   const signOut = useCallback(async () => {
+    // Explicit logout: cancel pending Live invites before clearing session (OPEN-004 / D7 logout path).
+    if (token) {
+      try {
+        await fetch("/me/logout", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } catch {
+        /* best-effort */
+      }
+    }
     if (mode === "dev-stub") {
       sessionStorage.removeItem("go_darom_dev_stub_token");
       setStubToken(null);
@@ -111,7 +122,7 @@ export function AuthProvider({
     if (clerkSignOut) {
       await clerkSignOut();
     }
-  }, [mode, clerkSignOut]);
+  }, [mode, clerkSignOut, token]);
 
   const value = useMemo(
     () => ({

@@ -6,7 +6,7 @@
 ## Setup
 
 - [ ] Two member accounts (A, B), both completed onboarding  
-- [ ] Optional third account or admin bootstrap for moderation checks  
+- [ ] Admin account via `docs/07-delivery/ADMIN_BOOTSTRAP.md` (see also `m3-admin-moderation-manual-qa.md`)  
 
 ## Presence (multi-tab + debounce)
 
@@ -24,12 +24,29 @@
 - [ ] Report on public message succeeds  
 - [ ] Admin can remove a public message; clients show removed state  
 
-## Direct messages
+## Direct messages + persistent routes
 
-- [ ] A opens הודעה from B’s member row → `/dms/:id`  
-- [ ] Messages persist across refresh; unread clears after read  
+- [ ] A opens «הודעה פרטית» from B’s member row → `/messages/:conversationId`  
+- [ ] Messages icon in navbar opens `/messages`  
+- [ ] Refresh on an open conversation restores the same `/messages/:id` (not Community)  
+- [ ] Copy conversation URL into another tab works for a participant  
+- [ ] Browser Back/Forward restores prior messaging views  
+- [ ] Legacy `/dms` and `/dms/:id` redirect to `/messages` equivalents  
+- [ ] Unknown / unauthorized conversation ids show branded error (not silent Community redirect)  
+- [ ] After Google login / onboarding, intended `/messages/:id` return-intent is preserved  
+- [ ] Message history restores across refresh; unread clears after read  
 - [ ] B receives **toast** for new DM and can open thread  
 - [ ] Multiple tabs for B both stay consistent after reconnect  
+
+## Layout / scroll / scrollbar
+
+- [ ] Community chat (`/community/chat`) and DMs are horizontally centered on desktop  
+- [ ] No unexpected page-level scroll during normal desktop conversation use  
+- [ ] Only message history (and DM list) scroll; composer stays visible  
+- [ ] Scrollbars are slim sage / subtle until hover  
+- [ ] Mobile 360/390/430: conversation usable; keyboard does not trap composer  
+- [ ] Draft survives incoming messages / token refresh / reconnect within the open thread  
+- [ ] Mine bubbles physical LEFT; others physical RIGHT  
 
 ## Blocking
 
@@ -61,4 +78,4 @@
 
 | Role | Date | Result |
 |---|---|---|
-| Owner | | Pass / Fail + notes |
+| Owner | 2026-10-30 | Pass — product/UI satisfied (chat, DMs, presence, notifications, ACC). Formal archival: `M3_FINAL_ACCEPTANCE_REPORT.md`. Rate limits (ACC-M3-Q03) deferred FU-M3-01. |

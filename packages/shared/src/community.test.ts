@@ -19,4 +19,12 @@ describe("isToastNotificationType", () => {
     expect(isToastNotificationType("dm.message")).toBe(true);
     expect(isToastNotificationType("moderation.report_resolved")).toBe(false);
   });
+
+  it("toasts live invite lifecycle events", () => {
+    expect(isToastNotificationType("game.invite")).toBe(true);
+    expect(isToastNotificationType("game.invite_accepted")).toBe(true);
+    expect(isToastNotificationType("game.invite_rejected")).toBe(true);
+    expect(isToastNotificationType("game.invite_cancelled")).toBe(true);
+    expect(isToastNotificationType("game.live_turn")).toBe(true);
+  });
 });

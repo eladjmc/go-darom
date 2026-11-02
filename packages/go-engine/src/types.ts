@@ -27,6 +27,17 @@ export interface ScoreSummary {
   white: ScoreDetail;
 }
 
+/**
+ * Authoritative scoring view from goban-engine `computeScore` + removal matrix.
+ * ownership: 0 neutral/empty undecided, 1 black territory, 2 white territory (empty points only).
+ */
+export interface ScoringView {
+  score: ScoreSummary;
+  /** Row-major [y][x] ownership of empty intersections from engine scoring_positions */
+  ownership: number[][];
+  removed: Coord[];
+}
+
 export type PlayResult =
   | { ok: true }
   | { ok: false; code: string; message: string };

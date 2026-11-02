@@ -13,6 +13,8 @@ export class AuthError extends Error {
   constructor(
     message: string,
     readonly status = 401,
+    /** Stable machine code for clients (logging / Hebrew mapping). */
+    readonly code?: string,
   ) {
     super(message);
     this.name = "AuthError";

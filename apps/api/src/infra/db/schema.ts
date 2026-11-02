@@ -1,5 +1,6 @@
 import {
   boolean,
+  index,
   integer,
   jsonb,
   pgEnum,
@@ -164,5 +165,107 @@ export const notifications = pgTable("notifications", {
   type: text("type").notNull(),
   payload: jsonb("payload").$type<Record<string, unknown>>().notNull(),
   readAt: timestamp("read_at", { withTimezone: true }),
+  /** Per-recipient hide; does not cancel underlying invites or affect other users. */
+  dismissedAt: timestamp("dismissed_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });
+
+/** M4 Live Go — see docs/04-contracts/m4-live-go-data.md */
+
+export const gameInvites = pgTable("game_invites", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  kind: text("kind").notNull().default("live"),
+  inviterId: uuid("inviter_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  recipientId: uuid("recipient_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  status: text("status").notNull().default("pending"),
+  settings: jsonb("settings").$type<Record<string, unknown>>().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+  gameId: uuid("game_id"),
+});
+
+export const games = pgTable("games", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  mode: text("mode").notNull().default("live"),
+  status: text("status").notNull().default("active"),
+  phase: text("phase").notNull().default("active_play"),
+  boardSize: integer("board_size").notNull(),
+  komi: text("komi").notNull(),
+  handicap: integer("handicap").notNull().default(0),
+  clockMode: text("clock_mode").notNull().default("none"),
+  colorMode: text("color_mode").notNull().default("random"),
+  blackUserId: uuid("black_user_id")
+    .notNull()
+    .references(() => users.id),
+  whiteUserId: uuid("white_user_id")
+    .notNull()
+    .references(() => users.id),
+  version: integer("version").notNull().default(1),
+  engineBlob: text("engine_blob").notNull(),
+  boardSnapshot: jsonb("board_snapshot").$type<Record<string, unknown>>().notNull(),
+  moveHistory: jsonb("move_history").$type<unknown[]>().notNull().default([]),
+  overlays: jsonb("overlays").$type<Record<string, unknown>>().notNull().default({}),
+  clock: jsonb("clock").$type<Record<string, unknown> | null>(),
+  result: jsonb("result").$type<Record<string, unknown> | null>(),
+  lastActivityAt: timestamp("last_activity_at", { withTimezone: true }).defaultNow().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  finishedAt: timestamp("finished_at", { withTimezone: true }),
+});
+
+/** One active Live game per user (both colors). */
+export const liveGameOccupancy = pgTable("live_game_occupancy", {
+  userId: uuid("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  gameId: uuid("game_id")
+    .notNull()
+    .references(() => games.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+/** Durable command idempotency — eviction-safe. */
+export const gameCommandReceipts = pgTable(
+  "game_command_receipts",
+  {
+    gameId: uuid("game_id")
+      .notNull()
+      .references(() => games.id, { onDelete: "cascade" }),
+    commandId: text("command_id").notNull(),
+    actorUserId: uuid("actor_user_id")
+      .notNull()
+      .references(() => users.id),
+    versionAfter: integer("version_after").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [uniqueIndex("game_command_receipts_uidx").on(table.gameId, table.commandId)],
+);
+
+/** Per-game room chat — independent of community DMs (ADR-017). */
+export const gameChatMessages = pgTable(
+  "game_chat_messages",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    gameId: uuid("game_id")
+      .notNull()
+      .references(() => games.id, { onDelete: "cascade" }),
+    senderUserId: uuid("sender_user_id")
+      .notNull()
+      .references(() => users.id),
+    body: text("body").notNull(),
+    clientCommandId: text("client_command_id").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("game_chat_messages_game_created_idx").on(table.gameId, table.createdAt),
+    uniqueIndex("game_chat_messages_idem_uidx").on(
+      table.gameId,
+      table.senderUserId,
+      table.clientCommandId,
+    ),
+  ],
+);

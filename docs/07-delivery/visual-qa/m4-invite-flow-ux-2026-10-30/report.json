@@ -1,0 +1,268 @@
+{
+  "date": "2026-10-30T20:41:14.023Z",
+  "web": "http://localhost:5173",
+  "shots": [
+    {
+      "name": "desktop-1280-hub-empty",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-invite-flow-ux-2026-10-30\\desktop-1280-hub-empty.png",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "name": "desktop-1440-hub-active",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-invite-flow-ux-2026-10-30\\desktop-1440-hub-active.png",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "desktop-1920-hub-multi",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-invite-flow-ux-2026-10-30\\desktop-1920-hub-multi.png",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "name": "mobile-360-hub-empty",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-invite-flow-ux-2026-10-30\\mobile-360-hub-empty.png",
+      "viewport": {
+        "width": 360,
+        "height": 740
+      }
+    },
+    {
+      "name": "mobile-390-hub-incoming",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-invite-flow-ux-2026-10-30\\mobile-390-hub-incoming.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "mobile-430-hub-multi",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-invite-flow-ux-2026-10-30\\mobile-430-hub-multi.png",
+      "viewport": {
+        "width": 430,
+        "height": 932
+      }
+    },
+    {
+      "name": "desktop-1280-invite-pick",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-invite-flow-ux-2026-10-30\\desktop-1280-invite-pick.png",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "name": "desktop-1440-invite-settings",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-invite-flow-ux-2026-10-30\\desktop-1440-invite-settings.png",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "desktop-1920-invite-settings",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-invite-flow-ux-2026-10-30\\desktop-1920-invite-settings.png",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "name": "mobile-360-invite-pick",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-invite-flow-ux-2026-10-30\\mobile-360-invite-pick.png",
+      "viewport": {
+        "width": 360,
+        "height": 740
+      }
+    },
+    {
+      "name": "mobile-390-invite-settings",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-invite-flow-ux-2026-10-30\\mobile-390-invite-settings.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "mobile-430-invite-settings",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-invite-flow-ux-2026-10-30\\mobile-430-invite-settings.png",
+      "viewport": {
+        "width": 430,
+        "height": 932
+      }
+    },
+    {
+      "name": "short-height-invite-settings",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-invite-flow-ux-2026-10-30\\short-height-invite-settings.png",
+      "viewport": {
+        "width": 1280,
+        "height": 520
+      }
+    },
+    {
+      "name": "zoom-200-invite-settings",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-invite-flow-ux-2026-10-30\\zoom-200-invite-settings.png"
+    }
+  ],
+  "checks": [
+    {
+      "label": "desktop-1280-invite-pick",
+      "scene": "pick",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "ok": true,
+      "card": {
+        "top": 132.125,
+        "bottom": 587.859375,
+        "height": 455.734375
+      },
+      "headerBottom": 176.21875,
+      "footerTop": 513.5,
+      "footerBottom": 586.859375,
+      "vh": 720,
+      "vw": 1280,
+      "bodyOverflow": "hidden"
+    },
+    {
+      "label": "desktop-1440-invite-settings",
+      "scene": "settings",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "ok": true,
+      "card": {
+        "top": 145.921875,
+        "bottom": 754.0625,
+        "height": 608.140625
+      },
+      "headerBottom": 190.015625,
+      "footerTop": 679.703125,
+      "footerBottom": 753.0625,
+      "vh": 900,
+      "vw": 1440,
+      "bodyOverflow": "hidden"
+    },
+    {
+      "label": "desktop-1920-invite-settings",
+      "scene": "settings",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "ok": true,
+      "card": {
+        "top": 235.921875,
+        "bottom": 844.0625,
+        "height": 608.140625
+      },
+      "headerBottom": 280.015625,
+      "footerTop": 769.703125,
+      "footerBottom": 843.0625,
+      "vh": 1080,
+      "vw": 1920,
+      "bodyOverflow": "hidden"
+    },
+    {
+      "label": "mobile-360-invite-pick",
+      "scene": "pick",
+      "viewport": {
+        "width": 360,
+        "height": 740
+      },
+      "ok": true,
+      "card": {
+        "top": 87.109375,
+        "bottom": 652.890625,
+        "height": 565.78125
+      },
+      "headerBottom": 131.203125,
+      "footerTop": 522.953125,
+      "footerBottom": 651.890625,
+      "vh": 740,
+      "vw": 360,
+      "bodyOverflow": "hidden"
+    },
+    {
+      "label": "mobile-390-invite-settings",
+      "scene": "settings",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "ok": true,
+      "card": {
+        "top": 36.703125,
+        "bottom": 807.28125,
+        "height": 770.578125
+      },
+      "headerBottom": 80.796875,
+      "footerTop": 677.34375,
+      "footerBottom": 806.28125,
+      "vh": 844,
+      "vw": 390,
+      "bodyOverflow": "hidden"
+    },
+    {
+      "label": "mobile-430-invite-settings",
+      "scene": "settings",
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "ok": true,
+      "card": {
+        "top": 80.703125,
+        "bottom": 851.28125,
+        "height": 770.578125
+      },
+      "headerBottom": 124.796875,
+      "footerTop": 721.34375,
+      "footerBottom": 850.28125,
+      "vh": 932,
+      "vw": 430,
+      "bodyOverflow": "hidden"
+    },
+    {
+      "label": "short-height-invite-settings",
+      "scene": "settings",
+      "viewport": {
+        "width": 1280,
+        "height": 520
+      },
+      "ok": true,
+      "card": {
+        "top": 16,
+        "bottom": 504,
+        "height": 488
+      },
+      "headerBottom": 60.09375,
+      "footerTop": 429.640625,
+      "footerBottom": 503,
+      "vh": 520,
+      "vw": 1280,
+      "bodyOverflow": "hidden"
+    },
+    {
+      "label": "zoom-200-settings",
+      "ok": true,
+      "headerVisible": true,
+      "footerVisible": true,
+      "bodyScrollable": true,
+      "cardTop": 32,
+      "cardBottom": 688,
+      "cardHeight": 656,
+      "vh": 720
+    }
+  ],
+  "errors": []
+}

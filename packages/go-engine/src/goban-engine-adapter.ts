@@ -13,6 +13,7 @@ import type {
   Player,
   PlayResult,
   ScoreSummary,
+  ScoringView,
   UndoResult,
   VariationInfo,
 } from "./types.js";
@@ -48,7 +49,13 @@ interface GobanEngineInstance {
     black: ScoreSide;
     white: ScoreSide;
   };
+  removal: boolean[][];
   setRemoved(x: number, y: number, removed: boolean): void;
+  toggleSingleGroupRemoval?(
+    x: number,
+    y: number,
+    force_removal?: boolean,
+  ): { removed: boolean; group?: Array<{ x: number; y: number }> };
   jumpTo(node: MoveTreeNode | null | undefined): void;
   showPrevious(): boolean;
   computeInitialStateForForkedGame(): { black: string; white: string };
@@ -60,6 +67,7 @@ interface ScoreSide {
   prisoners: number;
   stones: number;
   komi: number;
+  scoring_positions?: string;
 }
 
 interface MoveTreeNode {
@@ -77,6 +85,30 @@ interface SerializedGame {
   phase: GobanEngineInstance["phase"];
   initialState: { black: string; white: string };
   moves: Coord[];
+  /** Stone-removal marks — must survive serialize/restore during scoring */
+  removal?: boolean[][];
+}
+
+/** Decode OGS-style aa/ab… pairs from engine scoring_positions. */
+export function decodeScoringPositions(encoded: string): Coord[] {
+  const out: Coord[] = [];
+  const s = encoded || "";
+  for (let i = 0; i + 1 < s.length; i += 2) {
+    const x = s.charCodeAt(i)! - 97;
+    const y = s.charCodeAt(i + 1)! - 97;
+    if (x >= 0 && y >= 0) out.push({ x, y });
+  }
+  return out;
+}
+
+function scoreDetail(side: ScoreSide): ScoreSummary["black"] {
+  return {
+    total: side.total,
+    territory: side.territory,
+    prisoners: side.prisoners,
+    stones: side.stones,
+    komi: side.komi,
+  };
 }
 
 interface InternalGame extends EngineGame {
@@ -262,30 +294,81 @@ export class GobanEngineAdapter implements GoEnginePort {
     }
   }
 
+  toggleRemoved(game: EngineGame, coord: Coord): { removed: boolean } {
+    const { engine } = asInternal(game);
+    const currently = Boolean(engine.removal?.[coord.y]?.[coord.x]);
+    const next = !currently;
+    // force_removal=true: allow marking groups the heuristic considers "alive"
+    if (typeof engine.toggleSingleGroupRemoval === "function") {
+      const r = engine.toggleSingleGroupRemoval(coord.x, coord.y, true);
+      const after = Boolean(engine.removal?.[coord.y]?.[coord.x]);
+      if (after === next || Boolean(r.removed) === next) {
+        return { removed: after };
+      }
+    }
+    engine.setRemoved(coord.x, coord.y, next);
+    return { removed: next };
+  }
+
+  listRemoved(game: EngineGame): Coord[] {
+    const { engine } = asInternal(game);
+    const out: Coord[] = [];
+    const rem = engine.removal;
+    if (!rem) return out;
+    for (let y = 0; y < rem.length; y++) {
+      const row = rem[y]!;
+      for (let x = 0; x < row.length; x++) {
+        if (row[x]) out.push({ x, y });
+      }
+    }
+    return out;
+  }
+
   computeJapaneseScore(game: EngineGame): ScoreSummary {
     const { engine } = asInternal(game);
     engine.rules = "japanese";
     const score = engine.computeScore();
     return {
-      black: {
-        total: score.black.total,
-        territory: score.black.territory,
-        prisoners: score.black.prisoners,
-        stones: score.black.stones,
-        komi: score.black.komi,
+      black: scoreDetail(score.black),
+      white: scoreDetail(score.white),
+    };
+  }
+
+  getScoringView(game: EngineGame): ScoringView {
+    const { engine } = asInternal(game);
+    engine.rules = "japanese";
+    const score = engine.computeScore();
+    const w = engine.width;
+    const h = engine.height;
+    const ownership = Array.from({ length: h }, () => Array.from({ length: w }, () => 0));
+    for (const c of decodeScoringPositions(score.black.scoring_positions ?? "")) {
+      if (c.y >= 0 && c.y < h && c.x >= 0 && c.x < w) ownership[c.y]![c.x] = 1;
+    }
+    for (const c of decodeScoringPositions(score.white.scoring_positions ?? "")) {
+      if (c.y >= 0 && c.y < h && c.x >= 0 && c.x < w) ownership[c.y]![c.x] = 2;
+    }
+    return {
+      score: {
+        black: scoreDetail(score.black),
+        white: scoreDetail(score.white),
       },
-      white: {
-        total: score.white.total,
-        territory: score.white.territory,
-        prisoners: score.white.prisoners,
-        stones: score.white.stones,
-        komi: score.white.komi,
-      },
+      ownership,
+      removed: this.listRemoved(game),
     };
   }
 
   resumePlay(game: EngineGame): void {
-    asInternal(game).engine.phase = "play";
+    const { engine } = asInternal(game);
+    // Clear removal marks when returning to play
+    const rem = engine.removal;
+    if (rem) {
+      for (let y = 0; y < rem.length; y++) {
+        for (let x = 0; x < rem[y]!.length; x++) {
+          if (rem[y]![x]) engine.setRemoved(x, y, false);
+        }
+      }
+    }
+    engine.phase = "play";
   }
 
   serialize(game: EngineGame): string {
@@ -298,6 +381,7 @@ export class GobanEngineAdapter implements GoEnginePort {
       phase: internal.engine.phase,
       initialState: internal.initialState,
       moves: internal.moves.map((m) => ({ x: m.x, y: m.y })),
+      removal: internal.engine.removal?.map((row) => row.map((v) => Boolean(v))),
     };
     return JSON.stringify(payload);
   }
@@ -315,6 +399,14 @@ export class GobanEngineAdapter implements GoEnginePort {
     });
     if (data.phase) {
       engine.phase = data.phase;
+    }
+    if (data.removal && Array.isArray(data.removal)) {
+      for (let y = 0; y < data.removal.length; y++) {
+        const row = data.removal[y]!;
+        for (let x = 0; x < row.length; x++) {
+          if (row[x]) engine.setRemoved(x, y, true);
+        }
+      }
     }
     const game: InternalGame = {
       id: crypto.randomUUID(),

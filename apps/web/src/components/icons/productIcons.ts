@@ -22,7 +22,8 @@ export type AppIconName =
   | "menu"
   | "close"
   | "messages"
-  | "bell";
+  | "bell"
+  | "chevron";
 
 export type BrandIconDef = {
   kind: "brand";
@@ -33,7 +34,7 @@ export type BrandIconDef = {
 
 export type LucideIconDef = {
   kind: "lucide";
-  name: "home" | "community" | "shop" | "menu" | "close" | "messages" | "bell";
+  name: "home" | "community" | "shop" | "menu" | "close" | "messages" | "bell" | "chevron";
 };
 
 export type AppIconDef = BrandIconDef | LucideIconDef;
@@ -61,6 +62,7 @@ export const APP_ICONS: Record<AppIconName, AppIconDef> = {
   close: { kind: "lucide", name: "close" },
   messages: { kind: "lucide", name: "messages" },
   bell: { kind: "lucide", name: "bell" },
+  chevron: { kind: "lucide", name: "chevron" },
 };
 
 /** Route → icon name for primary product navigation */

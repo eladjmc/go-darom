@@ -1,7 +1,7 @@
 # M3 Acceptance Criteria
 
 **Milestone:** M3 Community messaging, presence, notifications & trust  
-**Status:** IMPLEMENTED — owner manual QA via `m3-manual-qa-checklist.md` before M3 sign-off
+**Status:** APPROVED 2026-10-30 — see `docs/07-delivery/M3_FINAL_ACCEPTANCE_REPORT.md`
 
 ## Presence & directory
 
@@ -56,9 +56,9 @@
 
 | ID | Criterion |
 |---|---|
-| ACC-M3-Q01 | `npm run typecheck`, `lint`, `test`, `build` pass |
-| ACC-M3-Q02 | M2 identity/directory/auth flows still pass (no visual redesign of approved M2 marketing shell) |
-| ACC-M3-Q03 | Rate limits reject abusive chat/report bursts without breaking normal use |
+| ACC-M3-Q01 | `npm run typecheck`, `lint`, `test`, `build` pass — **PASS** (final 2026-10-30) |
+| ACC-M3-Q02 | M2 identity/directory/auth flows still pass (no visual redesign of approved M2 marketing shell) — **PASS** (owner + regression) |
+| ACC-M3-Q03 | Rate limits reject abusive chat/report bursts without breaking normal use — **NOT VERIFIED** (middleware not implemented; FU-M3-01) |
 
 ## Explicit non-acceptance (not M3)
 

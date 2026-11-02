@@ -34,6 +34,8 @@ export interface NotificationDto {
   type: string;
   payload: Record<string, unknown>;
   readAt: string | null;
+  /** Present only if the recipient dismissed/hid this row; list APIs omit dismissed rows. */
+  dismissedAt?: string | null;
   createdAt: string;
 }
 
@@ -46,13 +48,68 @@ export interface BlockListItem {
 export type ReportTargetType = "public_message" | "dm_message";
 export type ReportStatus = "open" | "resolved" | "dismissed";
 
+export interface AdminPersonRef {
+  id: string;
+  nickname: string;
+  avatarUrl: string | null;
+}
+
 export interface ModerationReportSummary {
   id: string;
   targetType: ReportTargetType;
   status: ReportStatus;
   reason: string;
   createdAt: string;
+  /** @deprecated prefer reporter.nickname */
   reporterNickname: string | null;
+  reporter: AdminPersonRef;
+  reported: AdminPersonRef | null;
+}
+
+export interface AdminReportEvidenceMessage {
+  id: string;
+  threadSeq: number;
+  body: string;
+  createdAt: string;
+  isReported: boolean;
+  sender: AdminPersonRef;
+}
+
+export interface AdminReportDetail {
+  id: string;
+  targetType: ReportTargetType;
+  status: ReportStatus;
+  reason: string;
+  createdAt: string;
+  resolutionNote: string | null;
+  reporter: AdminPersonRef;
+  reported: AdminPersonRef | null;
+  reportedMessageId: string | null;
+  messages: AdminReportEvidenceMessage[];
+}
+
+export interface AdminOverviewCounts {
+  openReports: number;
+  suspendedMembers: number;
+  registeredMembers: number;
+}
+
+export interface AdminMemberRow {
+  id: string;
+  nickname: string;
+  avatarUrl: string | null;
+  role: "member" | "admin";
+  status: "active" | "suspended";
+  onboardingCompleted: boolean;
+}
+
+export interface AdminAuditRow {
+  id: string;
+  action: string;
+  entityType: string;
+  entityId: string;
+  createdAt: string;
+  actorNickname: string | null;
 }
 
 export const CHAT_BODY_MAX = 2000;
@@ -74,5 +131,14 @@ export function validateChatBody(raw: unknown): { ok: true; body: string } | { o
 }
 
 export function isToastNotificationType(type: string): boolean {
-  return type === "dm.message" || type === "game.invite" || type === "game.turn" || type === "study.invite";
+  return (
+    type === "dm.message" ||
+    type === "game.invite" ||
+    type === "game.invite_accepted" ||
+    type === "game.invite_rejected" ||
+    type === "game.invite_cancelled" ||
+    type === "game.live_turn" ||
+    type === "game.turn" ||
+    type === "study.invite"
+  );
 }

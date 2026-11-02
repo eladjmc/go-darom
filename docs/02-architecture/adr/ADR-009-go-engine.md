@@ -1,6 +1,6 @@
 # ADR-009: External Go Engine Behind an Adapter
 
-**Status:** POC REQUIRED — no implementation library finalized
+**Status:** POC PASSED (M1, 2026-10-29, 20/20) — `goban-engine` viable via `GoEnginePort`; permanent lock deferred until M4 Game LLD absorbs GAP-PHASE-01 / GAP-SEKI-01
 
 ## Context
 Live/async Go, Japanese territory scoring, dead stone mutual agreement, handicap placement, replay and SGF branching puzzles are full MVP commitments. Implementing full rules from scratch is high-risk.

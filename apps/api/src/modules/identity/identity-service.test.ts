@@ -11,6 +11,10 @@ function mockUsers(overrides: Partial<UserRepository> = {}): UserRepository {
     updateProfile: vi.fn(),
     listMembers: vi.fn(),
     touchLastSeen: vi.fn(),
+    promoteBootstrapAdmin: vi.fn(),
+    recordAdminBootstrapAudit: vi.fn(),
+    findById: vi.fn(),
+    findClerkExternalId: vi.fn(),
     ...overrides,
   } as unknown as UserRepository;
 }
@@ -91,6 +95,63 @@ describe("IdentityService", () => {
     };
     await expect(service.listMembers(actor)).rejects.toThrow(/הרשמה/);
     expect(users.listMembers).not.toHaveBeenCalled();
+  });
+
+  it("promotes an existing member listed in BOOTSTRAP_ADMIN_CLERK_IDS and keeps others untouched", async () => {
+    const member = {
+      id: "44444444-4444-4444-4444-444444444444",
+      nickname: "מנהל-לעתיד",
+      avatarUrl: null,
+      role: "member" as const,
+      onboardingCompleted: true,
+      suspendedAt: null,
+    };
+    const promoteBootstrapAdmin = vi.fn().mockResolvedValue({ id: member.id, role: "admin" as const });
+    const users = mockUsers({
+      findByClerkId: vi.fn().mockResolvedValue(member),
+      promoteBootstrapAdmin,
+    });
+    const service = new IdentityService(
+      users,
+      { verify: async () => ({ clerkUserId: "clerk_bootstrap" }) },
+      new PresenceRegistry(),
+      new Set(["clerk_bootstrap"]),
+    );
+    const actor = await service.authenticate("Bearer x");
+    expect(actor.role).toBe("admin");
+    expect(promoteBootstrapAdmin).toHaveBeenCalledWith(
+      member.id,
+      expect.objectContaining({
+        source: "BOOTSTRAP_ADMIN_CLERK_IDS",
+        clerkUserId: "clerk_bootstrap",
+        path: "existing",
+      }),
+    );
+  });
+
+  it("does not promote users absent from the bootstrap allowlist", async () => {
+    const member = {
+      id: "55555555-5555-5555-5555-555555555555",
+      nickname: "חבר",
+      avatarUrl: null,
+      role: "member" as const,
+      onboardingCompleted: true,
+      suspendedAt: null,
+    };
+    const promoteBootstrapAdmin = vi.fn();
+    const users = mockUsers({
+      findByClerkId: vi.fn().mockResolvedValue(member),
+      promoteBootstrapAdmin,
+    });
+    const service = new IdentityService(
+      users,
+      { verify: async () => ({ clerkUserId: "clerk_other" }) },
+      new PresenceRegistry(),
+      new Set(["clerk_bootstrap_only"]),
+    );
+    const actor = await service.authenticate("Bearer x");
+    expect(actor.role).toBe("member");
+    expect(promoteBootstrapAdmin).not.toHaveBeenCalled();
   });
 
   it("lists members after onboarding is complete", async () => {

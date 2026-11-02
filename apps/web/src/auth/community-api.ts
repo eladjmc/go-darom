@@ -131,13 +131,48 @@ export function markNotificationsRead(token: string, body: { ids?: string[]; all
   return request("/notifications/read", { method: "POST", token, body: JSON.stringify(body) });
 }
 
+export function dismissNotifications(token: string, body: { ids: string[] }) {
+  return request<{ ok: boolean; ids: string[] }>("/notifications/dismiss", {
+    method: "POST",
+    token,
+    body: JSON.stringify(body),
+  });
+}
+
+export function fetchAdminOverview(token: string) {
+  return request<import("@go-darom/shared").AdminOverviewCounts>("/admin/overview", { token });
+}
+
+export function fetchAdminMembers(
+  token: string,
+  opts: { q?: string; status?: "all" | "active" | "suspended" } = {},
+) {
+  const params = new URLSearchParams();
+  if (opts.q) params.set("q", opts.q);
+  if (opts.status && opts.status !== "all") params.set("status", opts.status);
+  const qs = params.toString() ? `?${params}` : "";
+  return request<{ items: import("@go-darom/shared").AdminMemberRow[] }>(`/admin/members${qs}`, {
+    token,
+  });
+}
+
 export function fetchAdminReports(token: string, status?: string) {
   const qs = status ? `?status=${encodeURIComponent(status)}` : "";
-  return request<{ items: unknown[] }>(`/admin/reports${qs}`, { token });
+  return request<{ items: import("@go-darom/shared").ModerationReportSummary[] }>(
+    `/admin/reports${qs}`,
+    { token },
+  );
 }
 
 export function fetchAdminReport(token: string, id: string) {
-  return request<Record<string, unknown>>(`/admin/reports/${id}`, { token });
+  return request<import("@go-darom/shared").AdminReportDetail>(`/admin/reports/${id}`, { token });
+}
+
+export function fetchAdminAudit(token: string, limit = 50) {
+  return request<{ items: import("@go-darom/shared").AdminAuditRow[] }>(
+    `/admin/audit?limit=${limit}`,
+    { token },
+  );
 }
 
 export function resolveAdminReport(token: string, id: string, resolution: "resolved" | "dismissed", note?: string) {
@@ -150,4 +185,20 @@ export function resolveAdminReport(token: string, id: string, resolution: "resol
 
 export function adminDeleteChatMessage(token: string, id: string) {
   return request(`/admin/chat/messages/${id}`, { method: "DELETE", token });
+}
+
+export function adminSuspendUser(token: string, userId: string, reason: string) {
+  return request(`/admin/users/${userId}/suspend`, {
+    method: "POST",
+    token,
+    body: JSON.stringify({ reason }),
+  });
+}
+
+export function adminUnsuspendUser(token: string, userId: string, reason: string) {
+  return request(`/admin/users/${userId}/unsuspend`, {
+    method: "POST",
+    token,
+    body: JSON.stringify({ reason }),
+  });
 }

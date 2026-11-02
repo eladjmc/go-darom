@@ -1,8 +1,12 @@
 # M3 Milestone Report — Community Messaging & Trust
 
-**Status:** M3 FIXES COMPLETE — awaiting owner QA sign-off (do not start M4)  
+**Status:** APPROVED (owner product/UI 2026-10-30 + final automated gates)  
+**Final acceptance:** `docs/07-delivery/M3_FINAL_ACCEPTANCE_REPORT.md`  
 **Date:** 2026-10-30  
 **LLD/contracts:** APPROVED before implementation  
+**Layout correction:** `docs/07-delivery/M3_LAYOUT_ROUTING_FIX.md`  
+**Admin bootstrap:** `docs/07-delivery/ADMIN_BOOTSTRAP.md` · moderation QA: `docs/06-quality/m3-admin-moderation-manual-qa.md`  
+**Admin Control Center (M3):** `docs/03-design/ADMIN_CONTROL_CENTER_SPEC.md` · task `docs/07-delivery/ADMIN_CONTROL_CENTER_CURSOR_TASK.md` · LLD `docs/05-modules/m3-admin-control-center/LLD.md`  
 
 ## Scope delivered
 
@@ -16,27 +20,19 @@
 | Online-only directory | `GET /members?online=1` + UI toggle on community members tab |
 | Blocking / reporting | Unchanged rules; report links on bubbles; block from members tab |
 | Unread policy | Existing `chat_thread_reads` — **no schema migration**; see `docs/04-contracts/m3-dm-unread.md` |
-
-## UX correction + required fixes (this pass)
-
-- Replaced form-like chat logs with message bubbles; compact composer (Enter / Shift+Enter).  
-- Messages ≠ Bell; DB-backed DM unread + system unread-count.  
-- **Draft stability:** Clerk JWT refresh no longer sets auth `loading` or remounts chat; socket session survives token refresh; history fetch is one-shot per thread; draft owned by parent state. Regression: `chatDraftStability.test.tsx`.  
-- **Alignment:** mine = physical LEFT, others = physical RIGHT (explicit CSS, not RTL-inferred); matching bubble tails; tighter stacked gaps.  
-- **Members:** sage toggle for «מחוברים בלבד»; compact member rows.  
-- **Scroll/overflow:** chat shell uses definite height + `grid-template-rows: auto minmax(0,1fr) auto`; thread is the only scroller (`min-height:0; overflow-y:auto`). DM list scrolls independently. Mobile fills `100dvh - header` via flex column. Scroll planner: `chatScroll.ts` + `messageThreadScroll.test.tsx`.  
+| Admin Control Center | RTL shell, overview/members/reports/detail/audit; server RBAC; future domains stubs only |
 
 ## Explicit non-goals (unchanged)
 
-Games / Study / invites emission, Redis, extra channels, file uploads, M4.
+Games / Study / invites emission, Redis, extra channels, file uploads, M4 implementation.
 
-## Quality gates (actual)
+## Quality gates (final 2026-10-30)
 
 ```text
 npm run typecheck   → PASS
 npm run lint        → PASS
 npm test            → PASS
-  shared 6 · go-engine 20 · api 9 · web 33 (draft + scroll)
+  shared 6 · go-engine 20 · api 18 · web 48
 npm run build       → PASS
 ```
 
@@ -44,24 +40,18 @@ npm run build       → PASS
 
 UX redesign: `docs/07-delivery/visual-qa/m3-messaging-ux-2026-10-30/`  
 Fixes (alignment / members): `docs/07-delivery/visual-qa/m3-fixes-2026-10-30/`  
-Long-history scroll: `docs/07-delivery/visual-qa/m3-scroll-2026-10-30/` (desktop + 360/390/430)  
+Long-history scroll: `docs/07-delivery/visual-qa/m3-scroll-2026-10-30/`  
+Layout + routes: `docs/07-delivery/visual-qa/m3-layout-routes-2026-10-30/`  
+Admin Control Center: `docs/07-delivery/visual-qa/m3-admin-control-center-2026-10-30/`  
 
-## Local testing instructions
+## Follow-ups (non-blocking)
 
-1. Postgres up; migrations applied (`0002_m3_community`).  
-2. `npm run dev:api` + `npm run dev:web`  
-3. Two authenticated users: community chat, directory → DM, Messages badge, Bell separate.  
-4. Refresh + second tab: unread total from API / `dm:unread`.  
-5. Block / report still enforced.  
+See `M3_FINAL_ACCEPTANCE_REPORT.md` FU-M3-01…06 (rate limits, DM soft-delete parity, OPEN-016 production, OPEN-010, ACC polish, deeper chaos tests).
 
-Manual checklist: `docs/06-quality/m3-manual-qa-checklist.md`
+## Sign-off
 
-## Risks / follow-ups (non-blocking)
-
-1. Soft-delete of own DM messages is limited vs public; admin delete is for public messages.  
-2. Rate limits are not yet middleware-enforced.  
-3. OPEN-010 account deletion matrix still deferred.
-
-## Approval requested
-
-Owner completes manual QA checklist, then approve **M3** before any **M4** work.
+| Role | Date | Result |
+|---|---|---|
+| Owner (product/UI) | 2026-10-30 | Pass — satisfied with chat, DMs, presence, notifications, ACC |
+| Automated gates | 2026-10-30 | Pass |
+| M4 implementation | — | **Blocked** until M4 plan approval |

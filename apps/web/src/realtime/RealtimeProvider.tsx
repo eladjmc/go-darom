@@ -8,15 +8,24 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { Link } from "react-router-dom";
 import { io, type Socket } from "socket.io-client";
 import type { NotificationDto } from "@go-darom/shared";
 import { useAuth } from "../auth/AuthContext";
 import { fetchDmUnreadTotal, fetchNotificationUnreadCount } from "../auth/community-api";
+import { openNotificationCenter } from "../notifications/openNotificationCenter";
 
 interface ToastItem {
   id: string;
+  /** Dedupe key — inviteId for game invites */
+  dedupeKey?: string;
   title: string;
   body: string;
+  href?: string;
+  /** Open bell overlay instead of navigating */
+  openNotifications?: boolean;
+  inviteId?: string;
+  actionLabel?: string;
 }
 
 interface RealtimeContextValue {
@@ -24,6 +33,8 @@ interface RealtimeContextValue {
   onlineIds: Set<string>;
   toasts: ToastItem[];
   dismissToast: (id: string) => void;
+  /** Local branded toast (game errors, etc.) — deduped by dedupeKey. */
+  pushToast: (item: Omit<ToastItem, "id"> & { id?: string; ttlMs?: number }) => void;
   /** System notifications (bell) — excludes dm.message */
   unreadNotifications: number;
   /** Private messages (Messages icon) — DB watermark total */
@@ -34,6 +45,82 @@ interface RealtimeContextValue {
 }
 
 const RealtimeContext = createContext<RealtimeContextValue | null>(null);
+
+function toastFromNotification(n: NotificationDto): ToastItem {
+  if (n.type === "dm.message") {
+    return {
+      id: n.id,
+      title: "הודעה פרטית חדשה",
+      body:
+        typeof n.payload.preview === "string"
+          ? n.payload.preview
+          : typeof n.payload.fromNickname === "string"
+            ? String(n.payload.fromNickname)
+            : "יש הודעה חדשה",
+      href:
+        typeof n.payload.threadId === "string" ? `/messages/${n.payload.threadId}` : "/messages",
+      actionLabel: "פתיחה",
+    };
+  }
+  if (n.type === "game.invite") {
+    const nick =
+      typeof n.payload.inviterNickname === "string" ? n.payload.inviterNickname : "חבר/ה";
+    const inviteId = typeof n.payload.inviteId === "string" ? n.payload.inviteId : "";
+    return {
+      id: n.id,
+      dedupeKey: inviteId ? `game.invite:${inviteId}` : undefined,
+      title: "הזמנה למשחק חי",
+      body: `${nick} הזמין/ה אתכם למשחק`,
+      openNotifications: true,
+      inviteId: inviteId || undefined,
+      actionLabel: "לפתיחת ההזמנה",
+    };
+  }
+  if (n.type === "game.invite_accepted") {
+    return {
+      id: n.id,
+      title: "ההזמנה התקבלה",
+      body: "המשחק החי נפתח",
+      href: typeof n.payload.gameId === "string" ? `/play/${n.payload.gameId}` : "/play",
+      actionLabel: "למשחק",
+    };
+  }
+  if (n.type === "game.invite_rejected") {
+    return {
+      id: n.id,
+      title: "ההזמנה נדחתה",
+      body:
+        typeof n.payload.recipientNickname === "string"
+          ? `${n.payload.recipientNickname} דחה/תה את ההזמנה`
+          : "ההזמנה למשחק נדחתה",
+    };
+  }
+  if (n.type === "game.invite_cancelled") {
+    return {
+      id: n.id,
+      title: "ההזמנה בוטלה",
+      body: "ההזמנה למשחק בוטלה",
+      openNotifications: true,
+      actionLabel: "להתראות",
+    };
+  }
+  if (n.type === "game.live_turn") {
+    return {
+      id: n.id,
+      title: "התור שלכם",
+      body: "מגיע תורכם במשחק החי",
+      href: typeof n.payload.gameId === "string" ? `/play/${n.payload.gameId}` : "/play",
+      actionLabel: "חזרה למשחק",
+    };
+  }
+  return {
+    id: n.id,
+    title: "התראה",
+    body: "יש עדכון חדש",
+    openNotifications: true,
+    actionLabel: "להתראות",
+  };
+}
 
 export function RealtimeProvider({ children }: { children: ReactNode }) {
   const { me, token } = useAuth();
@@ -48,6 +135,18 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
 
   const dismissToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
+  const pushToast = useCallback((item: Omit<ToastItem, "id"> & { id?: string; ttlMs?: number }) => {
+    const id = item.id ?? `local-${crypto.randomUUID()}`;
+    const ttl = item.ttlMs ?? 4500;
+    setToasts((prev) => {
+      const withoutDup = item.dedupeKey ? prev.filter((t) => t.dedupeKey !== item.dedupeKey) : prev;
+      return [...withoutDup, { ...item, id }];
+    });
+    window.setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, ttl);
   }, []);
 
   const refreshNotificationBadge = useCallback(() => {
@@ -122,17 +221,27 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
       if (typeof payload?.total === "number") setUnreadDmTotal(payload.total);
     });
     s.on("notification:toast", (n: NotificationDto) => {
-      const title = n.type === "dm.message" ? "הודעה פרטית חדשה" : "התראה";
-      const body =
-        typeof n.payload.preview === "string"
-          ? n.payload.preview
-          : typeof n.payload.fromNickname === "string"
-            ? String(n.payload.fromNickname)
-            : "יש עדכון חדש";
-      setToasts((prev) => [...prev, { id: n.id, title, body }]);
+      const inviteId = typeof n.payload?.inviteId === "string" ? n.payload.inviteId : "";
+      const inviteDedupe = inviteId ? `game.invite:${inviteId}` : undefined;
+      // Terminal invite events clear any open-invite toast for that invite.
+      if (
+        inviteDedupe &&
+        (n.type === "game.invite_cancelled" ||
+          n.type === "game.invite_accepted" ||
+          n.type === "game.invite_rejected")
+      ) {
+        setToasts((prev) => prev.filter((t) => t.dedupeKey !== inviteDedupe));
+      }
+      const item = toastFromNotification(n);
+      setToasts((prev) => {
+        const withoutDup = item.dedupeKey
+          ? prev.filter((t) => t.dedupeKey !== item.dedupeKey)
+          : prev;
+        return [...withoutDup, item];
+      });
       window.setTimeout(() => {
-        setToasts((prev) => prev.filter((t) => t.id !== n.id));
-      }, 6000);
+        setToasts((prev) => prev.filter((t) => t.id !== item.id));
+      }, 8000);
     });
 
     return () => {
@@ -148,6 +257,7 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
       onlineIds,
       toasts,
       dismissToast,
+      pushToast,
       unreadNotifications,
       unreadDmTotal,
       refreshNotificationBadge,
@@ -159,6 +269,7 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
       onlineIds,
       toasts,
       dismissToast,
+      pushToast,
       unreadNotifications,
       unreadDmTotal,
       refreshNotificationBadge,
@@ -174,9 +285,31 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
           <div key={t.id} className="toast-card">
             <strong>{t.title}</strong>
             <p>{t.body}</p>
-            <button type="button" className="btn btn-secondary" onClick={() => dismissToast(t.id)}>
-              סגור
-            </button>
+            <div className="toast-actions">
+              {t.openNotifications ? (
+                <button
+                  type="button"
+                  className="btn btn-primary btn-compact"
+                  onClick={() => {
+                    dismissToast(t.id);
+                    openNotificationCenter({ inviteId: t.inviteId });
+                  }}
+                >
+                  {t.actionLabel ?? "להתראות"}
+                </button>
+              ) : t.href ? (
+                <Link
+                  className="btn btn-primary btn-compact"
+                  to={t.href}
+                  onClick={() => dismissToast(t.id)}
+                >
+                  {t.actionLabel ?? "פתיחה"}
+                </Link>
+              ) : null}
+              <button type="button" className="btn btn-secondary btn-compact" onClick={() => dismissToast(t.id)}>
+                סגור
+              </button>
+            </div>
           </div>
         ))}
       </div>

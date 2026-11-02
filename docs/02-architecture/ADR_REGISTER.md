@@ -26,3 +26,4 @@ See `adr/ADR-008-outbox.md` and `adr/ADR-009-go-engine.md` for records needing e
 | ADR-014 | Pragmatic time/restart recovery, no high-availability infrastructure | OWNER DIRECTION CONFIRMED | Keepalive in initial Render, future always-on hosting, timestamp-derived expiries, tolerate rare interrupted casual games |
 | ADR-015 | Resumable account-deletion coordinator with module-owned idempotent steps | PROPOSED ENGINEERING DESIGN | Review retention and external identity cleanup in Privacy LLD |
 | ADR-016 | Explicit data mutation ownership by domain module | PROPOSED ENGINEERING DESIGN | Refine table-level ownership / cross-module contracts in LLD |
+| ADR-017 | Dedicated game-room chat (`game_chat_messages`); supersedes M4 D6 DM reuse | APPROVED 2026-11-02 | Independent of community DMs; participants-only M4; spectator-ready AuthZ |

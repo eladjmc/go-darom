@@ -1,0 +1,94 @@
+{
+  "date": "2026-11-02T09:21:57.367Z",
+  "web": "http://localhost:5173",
+  "shots": [
+    {
+      "name": "desktop-coords-9",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-board-scoring-ux-2026-11-02\\desktop-coords-9.png"
+    },
+    {
+      "name": "desktop-coords-13",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-board-scoring-ux-2026-11-02\\desktop-coords-13.png"
+    },
+    {
+      "name": "desktop-coords-19",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-board-scoring-ux-2026-11-02\\desktop-coords-19.png"
+    },
+    {
+      "name": "desktop-scoring-territory",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-board-scoring-ux-2026-11-02\\desktop-scoring-territory.png"
+    },
+    {
+      "name": "desktop-result-territory",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-board-scoring-ux-2026-11-02\\desktop-result-territory.png",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "name": "desktop-dm-labels",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-board-scoring-ux-2026-11-02\\desktop-dm-labels.png",
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      }
+    },
+    {
+      "name": "mobile-390-scoring",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-board-scoring-ux-2026-11-02\\mobile-390-scoring.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "mobile-360-coords-19",
+      "file": "c:\\Users\\Pc\\Desktop\\Code\\Misha\\go_darom\\docs\\07-delivery\\visual-qa\\m4-board-scoring-ux-2026-11-02\\mobile-360-coords-19.png",
+      "viewport": {
+        "width": 360,
+        "height": 740
+      }
+    }
+  ],
+  "checks": [
+    {
+      "label": "coords-9",
+      "ok": true,
+      "hasA": true,
+      "hasI": false,
+      "hasJ": true,
+      "hasTop": true,
+      "hasOne": true,
+      "terr": 0
+    },
+    {
+      "label": "coords-13",
+      "ok": true,
+      "hasA": true,
+      "hasI": false,
+      "hasJ": true,
+      "hasTop": true,
+      "hasOne": true,
+      "terr": 0
+    },
+    {
+      "label": "coords-19",
+      "ok": true,
+      "hasA": true,
+      "hasI": false,
+      "hasJ": true,
+      "hasTop": true,
+      "hasOne": true,
+      "terr": 0
+    },
+    {
+      "label": "scoring-territory",
+      "ok": true,
+      "terr": 12,
+      "black": 6,
+      "white": 6
+    }
+  ],
+  "errors": []
+}

@@ -15,6 +15,7 @@
     "@clerk/react": "^6.18.3",
     "@go-darom/go-engine": "0.1.0-m1",
     "@go-darom/shared": "0.1.0-m1",
+    "goban": "^8.3.226",
     "lucide-react": "^1.64.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

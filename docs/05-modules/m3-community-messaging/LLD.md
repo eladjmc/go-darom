@@ -19,7 +19,8 @@
 
 | Deferred | Milestone / note |
 |---|---|
-| Live/async games, Study invites, game-room side chat | M4+ |
+| Live/async games, Study invites | M4+ |
+| Game-room chat | M4 — dedicated `game_chat_messages` (ADR-017); not community DM |
 | Voice/video, chat file uploads, multiple public channels | Out of MVP (MVP_SCOPE) |
 | Full account-deletion privacy matrix (COMM-008 / OPEN-010) | Privacy LLD before release; M3 only avoids blocking future deletion |
 | Pagination “Load More” beyond soft caps if not needed at <500 WAUs | Optional within M3 if volume requires; not inventing infinite scroll UX |

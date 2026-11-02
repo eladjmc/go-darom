@@ -131,6 +131,10 @@ All admin routes **403** for non-admin.
 
 Own notifications, newest first.
 
+### `POST /notifications/dismiss`
+
+Body `{ "ids": ["uuid", ...] }`. Sets `dismissed_at` for the **current recipient only**. Dismissed rows are omitted from `GET /notifications` and unread counts. Does **not** cancel game invites or affect other users’ copies. Emits `notification:dismissed` `{ ids }` to the recipient’s user room for cross-tab sync.
+
 ### `POST /notifications/read`
 
 Body: `{ ids?: uuid[], all?: true }`

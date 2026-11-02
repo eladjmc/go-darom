@@ -1,6 +1,6 @@
 import { and, asc, eq, ilike, isNull, sql } from "drizzle-orm";
 import type { Db } from "../../infra/db/client.js";
-import { authIdentities, users } from "../../infra/db/schema.js";
+import { authIdentities, moderationAuditLog, users } from "../../infra/db/schema.js";
 import type { UserRole } from "./types.js";
 
 export class UserRepository {
@@ -95,5 +95,67 @@ export class UserRepository {
 
   async touchLastSeen(userId: string) {
     await this.db.update(users).set({ lastSeenAt: sql`now()` }).where(eq(users.id, userId));
+  }
+
+  async recordAdminBootstrapAudit(userId: string, detail: Record<string, unknown>) {
+    await this.db.insert(moderationAuditLog).values({
+      actorId: userId,
+      action: "admin_bootstrap",
+      entityType: "user",
+      entityId: userId,
+      detail,
+    });
+  }
+
+  /**
+   * One-time admin promotion for bootstrap (OPEN-016 / ADR-011).
+   * Only upgrades `member` → `admin` for the given user; never touches other rows.
+   * Writes an immutable moderation_audit_log entry when a promotion occurs.
+   */
+  async promoteBootstrapAdmin(
+    userId: string,
+    detail: Record<string, unknown>,
+  ): Promise<{ id: string; role: UserRole } | null> {
+    return this.db.transaction(async (tx) => {
+      const [row] = await tx
+        .update(users)
+        .set({ role: "admin", updatedAt: sql`now()` })
+        .where(and(eq(users.id, userId), eq(users.role, "member")))
+        .returning({ id: users.id, role: users.role });
+      if (!row) return null;
+      await tx.insert(moderationAuditLog).values({
+        actorId: userId,
+        action: "admin_bootstrap",
+        entityType: "user",
+        entityId: userId,
+        detail,
+      });
+      return row;
+    });
+  }
+
+  async findById(userId: string) {
+    const rows = await this.db
+      .select({
+        id: users.id,
+        nickname: users.nickname,
+        avatarUrl: users.avatarUrl,
+        role: users.role,
+        onboardingCompleted: users.onboardingCompleted,
+        suspendedAt: users.suspendedAt,
+      })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+    return rows[0] ?? null;
+  }
+
+  async findClerkExternalId(userId: string) {
+    const rows = await this.db
+      .select({ externalId: authIdentities.externalId })
+      .from(authIdentities)
+      .where(and(eq(authIdentities.userId, userId), eq(authIdentities.provider, "clerk")))
+      .limit(1);
+    return rows[0]?.externalId ?? null;
   }
 }

@@ -16,16 +16,32 @@ export class IdentityService {
   async authenticate(authorizationHeader: string | undefined): Promise<AuthenticatedActor> {
     const verified = await this.tokens.verify(authorizationHeader);
     let user = await this.users.findByClerkId(verified.clerkUserId);
+    const listedForBootstrap = this.bootstrapAdminClerkIds.has(verified.clerkUserId);
+
     if (!user) {
-      const role: UserRole = this.bootstrapAdminClerkIds.has(verified.clerkUserId)
-        ? "admin"
-        : "member";
+      const role: UserRole = listedForBootstrap ? "admin" : "member";
       user = await this.users.createWithClerkIdentity({
         clerkUserId: verified.clerkUserId,
         nickname: verified.suggestedNickname ?? null,
         avatarUrl: verified.suggestedAvatarUrl ?? null,
         role,
       });
+      if (role === "admin") {
+        await this.users.recordAdminBootstrapAudit(user.id, {
+          source: "BOOTSTRAP_ADMIN_CLERK_IDS",
+          clerkUserId: verified.clerkUserId,
+          path: "create",
+        });
+      }
+    } else if (user.role === "member" && listedForBootstrap) {
+      const promoted = await this.users.promoteBootstrapAdmin(user.id, {
+        source: "BOOTSTRAP_ADMIN_CLERK_IDS",
+        clerkUserId: verified.clerkUserId,
+        path: "existing",
+      });
+      if (promoted) {
+        user = { ...user, role: "admin" };
+      }
     }
 
     if (user.suspendedAt) {

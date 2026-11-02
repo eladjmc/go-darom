@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-30T18:56:28.673Z",
+  "web": "http://localhost:5173",
+  "importOk": true,
+  "mountOk": true,
+  "sizes": {
+    "9": {
+      "hostVisible": true,
+      "errVisible": false,
+      "childCount": 2,
+      "canvasCount": 2,
+      "width": 468,
+      "height": 468
+    },
+    "13": {
+      "hostVisible": true,
+      "errVisible": false,
+      "childCount": 2,
+      "canvasCount": 2,
+      "width": 429,
+      "height": 429
+    },
+    "19": {
+      "hostVisible": true,
+      "errVisible": false,
+      "childCount": 2,
+      "canvasCount": 2,
+      "width": 399,
+      "height": 399
+    }
+  },
+  "resizeOk": true,
+  "mobileOk": true,
+  "unmountOk": true,
+  "errors": []
+}

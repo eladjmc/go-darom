@@ -17,7 +17,8 @@
     "test": "npm run test -w @go-darom/shared && npm run test -w @go-darom/go-engine && npm run test -w @go-darom/api && npm run test -w @go-darom/web",
     "poc:go-engine": "npm run test -w @go-darom/go-engine",
     "db:generate": "npm run db:generate -w @go-darom/api",
-    "db:migrate": "npm run db:migrate -w @go-darom/api"
+    "db:migrate": "npm run db:migrate -w @go-darom/api",
+    "bootstrap:admin": "node scripts/bootstrap-admin.mjs"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.26.1",

@@ -10,8 +10,9 @@ Hebrew RTL Go community platform for southern Israel.
 |---|---|
 | M0 Documentation audit | Done |
 | M1 Foundation + Goban Engine POC | Approved |
-| M2 Visual shell + identity | Implemented — awaiting owner sign-off |
-| M3+ | Not started |
+| M2 Visual shell + identity | Approved |
+| M3 Community core + Admin Control Center | Approved (2026-10-30) — see `docs/07-delivery/M3_FINAL_ACCEPTANCE_REPORT.md` |
+| M4 Live Go | In progress — planning approved 2026-10-30; not complete until owner manual sign-off |
 
 ## Local development
 

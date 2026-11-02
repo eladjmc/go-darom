@@ -1,12 +1,12 @@
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
 import { useAuth } from "./auth/AuthContext";
 import { rememberReturnIntent } from "./auth/return-intent";
 import { AppShell } from "./components/layout/AppShell";
-import { AdminPage } from "./pages/AdminPage";
+import { AdminApp } from "./admin/AdminApp";
 import { HomePage } from "./pages/HomePage";
 import { MePage } from "./pages/MePage";
 import { CommunityPage } from "./pages/CommunityPage";
-import { DmInboxPage, DmThreadPage } from "./pages/DmPages";
+import { DmInboxPage } from "./pages/DmPages";
 import { NotificationsPage } from "./pages/NotificationsPage";
 import { OnboardingPage } from "./pages/OnboardingPage";
 import { LearnPage } from "./pages/LearnPage";
@@ -15,6 +15,9 @@ import { ShopPage } from "./pages/ShopPage";
 import { SignInPage } from "./pages/SignInPage";
 import { SsoCallbackPage } from "./pages/SsoCallbackPage";
 import { AppErrorPage } from "./pages/errors/AppErrorPage";
+import { PlayGamePage } from "./play/PlayGamePage";
+import { PlayHubPage } from "./play/PlayHubPage";
+import { MESSAGES_PATH, messagesConversationPath } from "./routing/chatRoutes";
 import "./pages/members.css";
 
 function AuthLoading() {
@@ -35,6 +38,13 @@ function RequireOnboarded({ children }: { children: React.ReactNode }) {
   }
   if (!me.onboardingCompleted) return <Navigate to="/onboarding" replace />;
   return children;
+}
+
+/** Legacy `/dms` → `/messages` (API still uses `/dms/*`). */
+function LegacyDmsRedirect() {
+  const { threadId } = useParams();
+  if (threadId) return <Navigate to={messagesConversationPath(threadId)} replace />;
+  return <Navigate to={MESSAGES_PATH} replace />;
 }
 
 export function App() {
@@ -59,27 +69,21 @@ export function App() {
           path="/admin/*"
           element={
             <RequireOnboarded>
-              <AdminPage />
+              <AdminApp />
             </RequireOnboarded>
           }
         />
-        <Route path="/community" element={<CommunityPage />} />
+        <Route path="/community/*" element={<CommunityPage />} />
         <Route
-          path="/dms"
+          path="/messages/*"
           element={
             <RequireOnboarded>
               <DmInboxPage />
             </RequireOnboarded>
           }
         />
-        <Route
-          path="/dms/:threadId"
-          element={
-            <RequireOnboarded>
-              <DmThreadPage />
-            </RequireOnboarded>
-          }
-        />
+        <Route path="/dms" element={<LegacyDmsRedirect />} />
+        <Route path="/dms/:threadId" element={<LegacyDmsRedirect />} />
         <Route
           path="/notifications"
           element={
@@ -91,11 +95,17 @@ export function App() {
         <Route
           path="/play"
           element={
-            <PlaceholderPage
-              title="משחקים"
-              description="משחקים ידידותיים בלי דירוגים וטורנירים. המגרש נפתח בקרוב — בינתיים מוזמנים למפגשים."
-              emptySrc="/empty-states/no-games.svg"
-            />
+            <RequireOnboarded>
+              <PlayHubPage />
+            </RequireOnboarded>
+          }
+        />
+        <Route
+          path="/play/:gameId"
+          element={
+            <RequireOnboarded>
+              <PlayGamePage />
+            </RequireOnboarded>
           }
         />
         <Route path="/learn" element={<LearnPage />} />

@@ -31,7 +31,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ["goban-engine"],
+    include: ["goban-engine", "goban"],
   },
   server: {
     port: 5173,
@@ -44,6 +44,8 @@ export default defineConfig({
       "/dms": apiProxy(),
       "/reports": apiProxy(),
       "/notifications": apiProxy(),
+      "/invites": apiProxy(),
+      "/games": apiProxy(),
       "/socket.io": {
         target: "http://localhost:4000",
         ws: true,
